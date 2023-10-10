@@ -11,15 +11,15 @@
 <body>
     <section>
     <div class="Bgimg">
-        <p class="ElectronicsShop">Electronics Shop</p>
-        <a href="HomeFR.php"><img src="FrenchFlag.png" alt="" height="100px" width="100px"></a>
+        <p class="ElectronicsShop">Magasin d'électronique</p>
+        <a href="Home.php"><img src="EnglishFlag.png" alt="" height="100px" width="100px"></a>
     </div>
     <?php
-    include "Commondiv.php"; topnav(1);
+    include "CommondivFR.php"; topnav(1);
     ?>
     </section>
     <section>
-      <p class="Welcome">All of your components in one place</p>
+      <p class="Welcome">Tous vos composants au même endroit</p>
       <div class="HomeContent">
           <img src="../Media/ultra-uhs-i-microsd-64gb.png" alt="Microsd 64Gb">
           <img src="../Media/Printing.png" alt="Printer">

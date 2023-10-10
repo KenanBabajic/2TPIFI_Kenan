@@ -11,9 +11,10 @@
     <section>
     <div class="Bgimg">
         <p class="ElectronicsShop">Electronics Shop</p>
+        <a href="ProductsFR.php"><img src="FrenchFlag.png" alt="" height="100px" width="100px"></a>
     </div>
     <?php
-    include "Commondiv.php";
+    include "Commondiv.php"; topnav(4);
     ?>
       </section>
       <section>
