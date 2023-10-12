@@ -5,6 +5,19 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Document</title>
+	<style>
+		td {
+			text-align: center;
+		}
+
+		table {
+			border: 1px solid black;
+		}
+
+		tr {
+			border-right: 1px solid black;
+		}
+	</style>
 </head>
 <body>
 	<?php
@@ -19,7 +32,7 @@ Variables must begin with a $ */
 // Array : {"Hello","bRUH"}
 // Object : {"name": "Hello World"} - There are methods inside.
 // NULL : null
-$firstname = "Kenan";
+/* $firstname = "Kenan";
 $familyname = "Babajic";
 $fakeString = "1223";
 
@@ -39,13 +52,58 @@ for ($i=0;$i < 1000; $i++) {
 	print "The sum of the first 1000 odd numbers is " . $number;
 	print ("<br>");
 
+	$MyArray = [0,5,20,30];
 
+echo $MyArray[1];
 
+for ( $i=0; $i<count($MyArray); $i++) {
+	print($MyArray[$i]);
 
+}
+*/
+/*
+
+<table>
+	<tr>
+		<th>Age</th>
+		<th>Classmates</th>
+	</tr>
+	<?php
+	$Age = [20, 19, 18, 21];
+	$TableArray = ["Kenan", "Igor", "Maw", "Dominic"];
+
+for ($i=0; $i<count($TableArray); $i++) {
+print("<tr> <td>".$Age[$i]. "</td> <td>". $TableArray[$i]. "</td></tr>");	
+}
+?>
+</table> */
+?>
+<table>
+	<tr>
+		<th>Percentage of pullin a girl</th>
+		<th>Blud</th>
+	</tr>
+	<?php
+	$Age = [20, 19, 18, 21];
+	$TableArray = ["Kenan", "Igor"];
+	$PercentageArray = [];
+for ($i=0; $i<count($TableArray); $i++) {
+	$Percentage = (rand(0,100));
+
+	array_push($PercentageArray, $Percentage);
+	?>
+	<tr>
+		<td><?= $PercentageArray[$i] . "%" ?></td>
+		<td><?= $TableArray[$i]; ?></td>
+
+	</tr>
+<?php
+}
+?>
+<?php
 // To put them together in javascript - firstname + " " + secondname;
 
 
-print $fullname;
 
 $hello = "Hello world";
 $Hello = "Hello bruv";
