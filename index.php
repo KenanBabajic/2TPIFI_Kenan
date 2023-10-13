@@ -17,6 +17,18 @@
 		tr {
 			border-right: 1px solid black;
 		}
+
+		.coloredBox {
+			height: 20px;
+		width: 20px;
+		display: inline-block;
+			background-color: green;
+		}
+
+		.Exercise {
+			display: inline-block;
+			padding-right: 10px;
+		}
 	</style>
 </head>
 <body>
@@ -80,34 +92,135 @@ print("<tr> <td>".$Age[$i]. "</td> <td>". $TableArray[$i]. "</td></tr>");
 ?>
 <table>
 	<tr>
-		<th>Percentage of pullin a girl</th>
+		<th>Percentage</th>
 		<th>Blud</th>
 	</tr>
 	<?php
 	$Age = [20, 19, 18, 21];
 	$TableArray = ["Kenan", "Igor"];
 	$PercentageArray = [];
-for ($i=0; $i<count($TableArray); $i++) {
-	$Percentage = (rand(0,100));
-
-	array_push($PercentageArray, $Percentage);
-	?>
+	for ($i=0; $i<count($TableArray); $i++) {
+		$Percentage = (rand(0,100));
+	
+		array_push($PercentageArray, $Percentage);
+		?>
 	<tr>
 		<td><?= $PercentageArray[$i] . "%" ?></td>
-		<td><?= $TableArray[$i]; ?></td>
-
+<td>
+	<?php
+	for($j=0; $j<count($TableArray); $j++) {
+		?>
+		<div class="coloredBox"></div>
+		<?php
+	}
+	?>
+</td>
 	</tr>
 <?php
 }
 ?>
+<table>
+
+
+<h2>Non numerically indexed arrays</h2>
+<p>Build an array of people names and age:
+	Option 1 using arrays: BAD OPTION. The indices of these arrays are numbers that start with 0
+</p>
 <?php
-// To put them together in javascript - firstname + " " + secondname;
+$names = ["John","Mary","Peter","Jane"];
+$age = [20,30,40];
 
+?>
 
+Option 2:
+-Good option, using one array:
 
-$hello = "Hello world";
-$Hello = "Hello bruv";
+the indices of this array are STRINGS.
 
+<?php
+
+$ppl = ["John" => 20, "Mary" => 30, "Joe" => 40, "Jane" => 50]; //Attention to the => , this is not a numerically indexed array
+//Which means that code like:
+//print $ppl[0]; // will not work
+
+// instead we need to use :
+// print $ppl["John"]; - This will work
+
+//Called associative array
+//question: how do we retrieve all the elements of this array?
+
+// We need to use FOREACH loop
+
+foreach ($ppl as $name => $age) {
+	print "Name: ".$name." - Age:". $age.  "<br>";
+}
+
+/* An associative array is made of PAIRs of elements, first is the KEY and second is the Value.
+
+in the above example:
+-"John" is the key
+- 20 is the value
+
+The sign & is called an amperstand and it is used to pass a variable by reference.
+
+/* array_pop($TableArray); - it shows the last array element and pops it out*/
+
+function Test($parameter) {
+	$parameter = 100;
+}
+
+$x = 1;
+Test($x);
+print $x . "<br>";
+
+// this is called pass by value of a variable and is Most widely used method for passing variables to functions.
+// there is another way of passing variables to functions and it is called pass by reference
+
+function Test2(&$parameter) {
+}
+
+$x = 1;
+Test2($x); // this will change the value of x to 100
+?>
+print $x;
+
+<br>
+<?php
+
+$arrTest = array(1,2,3,4);
+foreach($arrTest as $value) {
+	$value = $value * 2;
+}
+
+// how to create new elements in an associative array
+// We already have this array
+$ppl2 = [];
+// we need to add a new element to this array("Angelina" => 60)
+$ppl2["Angelina"] = 60;
+$ppl["John"] = 20;
+$ppl["Kenan"] = 30;
+$ppl["Brad"] = 40;
+$ppl["Ben"] = 30;
+$ppl["Maw"] = 40;
+// that is why the names above are called Keys -> the main property of a key is that it's unique
+
+$NameToHeight = ["Kenan" => 193, "Maw" => 100, "Igor" => 150, "Ben" => 160];
+foreach ($NameToHeight as $Name => $Height) {
+	
 	?>
+	<div class="Exercise"><?= $Name?></div><div class="Exercise"><?= $Height?></div><br>
+<?php
+
+}
+
+
+$arr = [10,25,30,21,65,24,20];
+$newItemforarray = 100;
+array_push($arr, $newItemforarray);
+$retVal = array_pop($arr);
+
+
+?>
+	
 </body>
 </html>
