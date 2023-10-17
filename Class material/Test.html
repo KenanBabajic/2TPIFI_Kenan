@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        let ChosenNumber = 20
+        let Steps = 0
+
+    while (ChosenNumber != 1) {
+        if (ChosenNumber % 2 == 0) {
+            ChosenNumber = ChosenNumber / 2
+            Steps++
+        }
+        else if (ChosenNumber % 2 !==0) {
+            ChosenNumber = ChosenNumber * 3 + 1
+            Steps++
+        }
+        console.log(ChosenNumber)
+    }
+    console.log("Number of steps " + Steps)
+    </script>
+</body>
+</html>
