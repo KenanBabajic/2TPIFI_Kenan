@@ -33,6 +33,7 @@ if (isset($_GET["XSubtract"], $_GET["YSubtract"])){
     <?php
     }
 }
+
     ?>
     ADD
     <form method="GET">
@@ -48,6 +49,7 @@ if (isset($_GET["XSubtract"], $_GET["YSubtract"])){
         <input type="number" name="YSubtract">
         <input type="submit" value="Submit">
     </form>
+   
 <?php
 /* Isset in php
 
