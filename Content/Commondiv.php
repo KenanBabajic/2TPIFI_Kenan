@@ -11,7 +11,7 @@ function topnav($activePage)
         <a class="<?php if ($activePage == 3) print ("active");
         else print("inactive"); ?>" href="Contact.php">Contact</a>
         <a class="<?php if ($activePage == 4) print ("active");
-        else print("inactive"); ?>" href="Products.php">Products</a>
+        else print("inactive"); ?>" href="products2.php">Products</a>
         <a class="<?php if ($activePage == 5) print ("active");
         else print("inactive"); ?>" href="Members.php">Members</a>
 </div>
