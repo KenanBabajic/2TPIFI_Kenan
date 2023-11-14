@@ -7,6 +7,27 @@
     <link rel="stylesheet" href="Website4.css?val=<?=time(); ?>">
     <script src="Script.js"></script>
     <title></title>
+    <style>
+        .AllProducts {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-evenly;
+      align-items: center;
+  }
+  
+  .OneProduct {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-evenly;
+      align-items: center;
+      border: 1px solid blue;
+      border-radius: 10px;
+      width: 200px;
+      height: 300px;
+      background-color: red;
+  }
+  
+    </style>
 </head>
 <body>
     <section>
@@ -20,14 +41,29 @@
 
     <h1>Yo</h1>
 
-    <div class="AllProducts">
-      <?php
+      <?php 
 //Open a text file
 $handle = fopen("Book1.csv", "r");
+fgets($handle);
+
 //Read from the file - line by line
 while(!feof($handle)) {
     $line = fgets($handle); //This will read one line of the text
-    print($line. "<br>");
+$pieces = explode(";", $line);
+?>
+<div class="AllProducts">
+    <div class="OneProduct">
+    <div>Price: <?=$pieces[1]?>Euro/piece</div>
+    <img src="<?php$pieces[3]?>" alt=""/ height="150px">
+    <div>Desciption: <?=$pieces[2]?></div>
+    </div>
+    </div>
+    <?php
+
+
+        ?>
+   
+    <?php
 }
 //Close the file
 fclose($handle);
