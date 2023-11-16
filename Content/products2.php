@@ -54,7 +54,7 @@ $pieces = explode(";", $line);
 <div class="AllProducts">
     <div class="OneProduct">
     <div>Price: <?=$pieces[1]?>Euro/piece</div>
-    <img src="<?php$pieces[3]?>" alt=""/ height="150px">
+    <img src="<?=$pieces[3]?>" alt=""/ height="150px">
     <div>Desciption: <?=$pieces[2]?></div>
     </div>
     </div>
