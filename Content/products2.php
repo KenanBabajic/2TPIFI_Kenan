@@ -36,37 +36,37 @@
         <a href="HomeFR.php"><img src="FrenchFlag.png" alt="" height="100px" width="100px"></a>
     </div>
     <?php
-    include "Commondiv.php"; topnav(1);
+    include "Commondiv.php"; topnav(4);
     ?>
-
-    <h1>Yo</h1>
+    </section>
 
       <?php 
-//Open a text file
-$handle = fopen("Book1.csv", "r");
-fgets($handle);
+$handle = fopen('products_list.txt', 'r');
 
-//Read from the file - line by line
-while(!feof($handle)) {
-    $line = fgets($handle); //This will read one line of the text
-$pieces = explode(";", $line);
-?>
-<div class="AllProducts">
-    <div class="OneProduct">
-    <div>Price: <?=$pieces[1]?>Euro/piece</div>
-    <img src="<?=$pieces[3]?>" alt=""/ height="150px">
-    <div>Desciption: <?=$pieces[2]?></div>
-    </div>
-    </div>
-    <?php
+while (!feof($handle)) {
+  $line = fgets($handle); // Read one line of text from the csv
+  $product = explode(',', $line); // Assuming products are separated by commas in your file
 
-
-        ?>
+  // Check if the line is not empty
+  if (!empty($line)) {
+    // Start a new product container with the specified style
+    echo '<div class="OneProduct">';
    
-    <?php
+    // Output product information inside the container
+    foreach ($product as $info) {
+      echo '<p>' . $info . '</p>';
+    }
+
+    // Add a buy button with a link or form for purchasing
+    echo '<button onclick="buyProduct(' . $product[0] . ')">Buy</button>'; // Assuming the first element is a unique product identifier
+
+    // Close the product container
+    echo '</div>';
+  }
 }
+
 //Close the file
 fclose($handle);
       ?>
-    </div>
+    
 </body>
