@@ -14,7 +14,9 @@
         <a href="MembersFR.php"><img src="FrenchFlag.png" alt="" height="100px" width="100px"></a>
     </div>
     <?php
-    include "Commondiv.php"; topnav(5);
+    include "Commondiv.php";
+    topnav(5, $language);
+
     ?>
     </section>
     <section>

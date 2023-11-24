@@ -1,2 +1,2 @@
-PIXMA TR4720,For all your work or home printing needs,Price: 119.99€
-PIXMA TR4720,For all your work or home printing needs,Price: 119.99€
+PIXMA TR4720,For all your work or home printing needs,tomato.png,119.99€,Ceci est pour le travail que vous avez a la maison
+PIXMA TR4720,For all your work or home printing needs,potatoes.png,119.99€,Ceci est pour le travail que vous avez a la maison

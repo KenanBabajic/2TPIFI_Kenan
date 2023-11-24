@@ -1,5 +1,6 @@
+
 <?php
-function topnav($activePage) 
+function topnav($activePage2) 
 {
         ?>
 
