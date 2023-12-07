@@ -14,7 +14,7 @@ function topnav($activePage, $language)
                 <a class="<?php if ($activePage == 1)
                         print("active");
                 else
-                        print("inactive"); ?>" href="Home.php">
+                        print("inactive"); ?>" href="Home.php?lang=<?= $language ?>">
                         <?php if ($language == "EN")
                                 print "Home";
                         else
@@ -23,7 +23,7 @@ function topnav($activePage, $language)
                 <a class="<?php if ($activePage == 2)
                         print("active");
                 else
-                        print("inactive"); ?>" href="About.php">
+                        print("inactive"); ?>" href="About.php?lang=<?= $language ?>">
                         <?php if ($language == "EN")
                                 print "About";
                         else
@@ -32,7 +32,7 @@ function topnav($activePage, $language)
                 <a class="<?php if ($activePage == 3)
                         print("active");
                 else
-                        print("inactive"); ?>" href="Contact.php">
+                        print("inactive"); ?>" href="Contact.php?lang=<?= $language ?>">
                         <?php if ($language == "EN")
                                 print "Contact";
                         else
@@ -41,7 +41,7 @@ function topnav($activePage, $language)
                 <a class="<?php if ($activePage == 4)
                         print("active");
                 else
-                        print("inactive"); ?>" href="products2.php">
+                        print("inactive"); ?>" href="products2.php?lang=<?= $language ?>">
                         <?php if ($language == "EN")
                                 print "Products";
                         else
@@ -50,7 +50,7 @@ function topnav($activePage, $language)
                 <a class="<?php if ($activePage == 5)
                         print("active");
                 else
-                        print("inactive"); ?>" href="Login.php">
+                        print("inactive"); ?>" href="Login.php?lang=<?= $language ?>">
                         <?php if ($language == "EN")
                                 print "Login";
                         else
