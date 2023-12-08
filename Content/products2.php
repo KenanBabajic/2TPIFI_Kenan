@@ -6,31 +6,60 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="Website4.css?val=<?=time(); ?>">
-
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300&display=swap" rel="stylesheet">
     <style>
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva,
-                Verdana, sans-serif;
+                       font-family: 'Josefin Sans', sans-serif; /* Updated font */
             background-color: black;
         }
 
         .Bgimg {
-            background: linear-gradient(to bottom, #3498db, #2c3e50);
-            color: white;
-            text-align: center;
-            padding: 20px;
-        }
+            background: black; /* Add your pattern background */
+    color: white;
+    text-align: center;
+    padding: 50px;
+    position: relative;
+    overflow: hidden; /* Hide overflowing content */
+}
+
+.Bgimg::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0.2; /* Adjust the opacity of the pattern */
+}
+
 
         .ElectronicsShop {
             font-size: 100px;
             margin: 0;
+            background-color: #000; /* Set the background color to black */
+            color: #3498db; /* Set the text color to blue */
+            padding: 20px; /* Add some padding for better visibility */
+            border-radius: 10px; /* Add rounded corners */
+            animation: colorChange 5s infinite alternate; /* Add animation */
+        }
+        
+        @keyframes colorChange {
+            0% {
+                background-color: #000;
+                color: #3498db;
+            }
+            100% {
+                background-color: #3498db;
+                color: #000;
+            }
         }
 
         section {
-            background: linear-gradient(to bottom, #3498db, #2c3e50);
-            padding: 20px;
+            background: url('Gaming5.jpg');        
         }
 
         .top-nav {
@@ -98,18 +127,32 @@
             cursor: pointer;
             margin-top: 20px;
         }
+        footer {
+            background: linear-gradient(to bottom, #3498db, #2c3e50);
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            margin: 0;
+        }
+        #Spacesection {
+            padding-bottom: 120px;
+        }
     </style>
 </head>
 
 <body>
     <section>
         <div class="Bgimg">
-            <p class="ElectronicsShop">Electronics Shop</p>
+            <p class="ElectronicsShop">GamingShop</p>
         </div>
         <?php include "Commondiv.php";
         topnav(4, $language);
         ?>
     </section>
+    <section id="Spacesection">
     <div class="AllProducts">
 
         <?php
@@ -127,6 +170,7 @@ while (!feof($handle)) {
                 <div>Price: <?=$product[3]; ?></div>
                 <div>Description:<?= ($language=="EN") ? $product[1] : $product[3] ?></div>
                 <button id="BuyShop">Buy</button>
+
             </div>
         </div>
         <?php
@@ -136,7 +180,10 @@ while (!feof($handle)) {
 fclose($handle);
 ?>
     </div>
-
+    </section>
+    <footer>
+        <p>HTML Babajic Kenan 2022</p>
+    </footer>
 </body>
 
 </html>

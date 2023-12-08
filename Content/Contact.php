@@ -54,7 +54,7 @@
 
         .Welcome2 {
             font-size: 24px;
-            color: #333;
+            color: white;
             text-align: center;
         }
 

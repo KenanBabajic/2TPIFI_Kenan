@@ -3,7 +3,6 @@ $language = "EN";
 if (isset($_GET["lang"])) {
         $language = $_GET["lang"];
 }
-print("Language is " . $language);
 function topnav($activePage, $language)
 {
         // global $languge; //bad option !!
