@@ -96,6 +96,14 @@ opacity: 0.2; /* Adjust the opacity of the pattern */
             flex-wrap: wrap;
             justify-content: space-evenly;
             align-items: center;
+            box-shadow: rgba(52, 152, 219, 0.4) 5px 5px, rgba(52, 152, 219, 0.3) 10px 10px, rgba(52, 152, 219, 0.2) 15px 15px, rgba(52, 152, 219, 0.1) 20px 20px, rgba(52, 152, 219, 0.05) 25px 25px;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+
+        }
+
+        form:hover {
+            transform: scale(0.95); /* Slightly smaller size when selected */
+
         }
 
         input {

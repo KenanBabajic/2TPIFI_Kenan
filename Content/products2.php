@@ -102,19 +102,16 @@
             background-color: white;
             box-shadow: rgba(52, 152, 219, 0.4) 5px 5px, rgba(52, 152, 219, 0.3) 10px 10px, rgba(52, 152, 219, 0.2) 15px 15px, rgba(52, 152, 219, 0.1) 20px 20px, rgba(52, 152, 219, 0.05) 25px 25px;
             margin: 20px;
-
             transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+
         }
 
         .OneProduct:hover {
             transform: scale(0.95); /* Slightly smaller size when selected */
 
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Box shadow on hover */
         }
 
-        .OneProduct:active {
-            transform: scale(0.95); /* Slightly smaller size when selected */
-        }
+    
         .OneProduct img {
             width: 100%;
             height: 200px;
