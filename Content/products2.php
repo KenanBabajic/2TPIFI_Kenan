@@ -12,7 +12,7 @@
         body {
             margin: 0;
             padding: 0;
-                       font-family: 'Josefin Sans', sans-serif; /* Updated font */
+            font-family: 'Josefin Sans', sans-serif; /* Updated font */
             background-color: black;
         }
 
@@ -59,7 +59,8 @@
         }
 
         section {
-            background: url('Gaming5.jpg');        
+            background: black;     
+
         }
 
         .top-nav {
@@ -99,10 +100,21 @@
             height: 500px;
             text-align: center;
             background-color: white;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: rgba(52, 152, 219, 0.4) 5px 5px, rgba(52, 152, 219, 0.3) 10px 10px, rgba(52, 152, 219, 0.2) 15px 15px, rgba(52, 152, 219, 0.1) 20px 20px, rgba(52, 152, 219, 0.05) 25px 25px;
             margin: 20px;
+
+            transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
         }
 
+        .OneProduct:hover {
+            transform: scale(0.95); /* Slightly smaller size when selected */
+
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Box shadow on hover */
+        }
+
+        .OneProduct:active {
+            transform: scale(0.95); /* Slightly smaller size when selected */
+        }
         .OneProduct img {
             width: 100%;
             height: 200px;
@@ -128,17 +140,21 @@
             margin-top: 20px;
         }
         footer {
-            background: linear-gradient(to bottom, #3498db, #2c3e50);
-            color: white;
+            background-color: black;
+            color: #fff;
             text-align: center;
-            padding: 10px;
+            padding: 20px;
             position: fixed;
             bottom: 0;
             width: 100%;
+        }
+
+        footer p {
             margin: 0;
+            font-size: 14px;
         }
         #Spacesection {
-            padding-bottom: 120px;
+            padding-bottom: 100px;
         }
     </style>
 </head>
@@ -146,7 +162,7 @@
 <body>
     <section>
         <div class="Bgimg">
-            <p class="ElectronicsShop">GamingShop</p>
+            <p class="ElectronicsShop">Gaming Shop</p>
         </div>
         <?php include "Commondiv.php";
         topnav(4, $language);
@@ -168,7 +184,7 @@ while (!feof($handle)) {
             <div class="product-details">
                 <div>Name: <?=$product[0]; ?></div>
                 <div>Price: <?=$product[3]; ?></div>
-                <div>Description:<?= ($language=="EN") ? $product[1] : $product[3] ?></div>
+                <div>Description:<?= ($language=="EN") ? $product[1] : $product[5] ?></div>
                 <button id="BuyShop">Buy</button>
 
             </div>

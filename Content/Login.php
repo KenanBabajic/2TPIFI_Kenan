@@ -13,43 +13,54 @@
             margin: 0;
             padding: 0;
             font-family: 'Josefin Sans', sans-serif; /* Updated font */
-            background-color: #f5f5f5;
-            color: white;
+            background-color:black;
         }
 
-        .Bgimg {
-            background: linear-gradient(to bottom, #3498db, #2c3e50);
-            color: white;
-            text-align: center;
-            padding: 20px;
-        }
 
-        .ElectronicsShop {
-            font-family: 'Josefin Sans', sans-serif; /* Apply the updated font */
+.Bgimg {
+    background: black; /* Add your pattern background */
+color: white;
+text-align: center;
+padding: 50px;
+position: relative;
+overflow: hidden; /* Hide overflowing content */
+}
 
-            font-size: 100px;
-            margin: 0;
-            color: white;
-            position: relative;
-            z-index: 1;
-            animation: shine 2s infinite;
-        }
+.Bgimg::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+z-index: -1;
+opacity: 0.2; /* Adjust the opacity of the pattern */
+}
 
-        @keyframes shine {
-            0% {
-                color: white;
-            }
-            50% {
-                color: #f8c500; /* A goldish color */
-            }
-            100% {
-                color: white;
-            }
-        }
+
+.ElectronicsShop {
+    font-size: 100px;
+    margin: 0;
+    background-color: #000; /* Set the background color to black */
+    color: #3498db; /* Set the text color to blue */
+    padding: 20px; /* Add some padding for better visibility */
+    border-radius: 10px; /* Add rounded corners */
+    animation: colorChange 5s infinite alternate; /* Add animation */
+}
+
+@keyframes colorChange {
+    0% {
+        background-color: #000;
+        color: #3498db;
+    }
+    100% {
+        background-color: #3498db;
+        color: #000;
+    }
+}
 
         section {
-            background: linear-gradient(to bottom, #3498db, #2c3e50);
-            padding: 20px;
+            background: black;
         }
 
         .top-nav {
@@ -95,7 +106,7 @@
         }
 
         input[type="submit"] {
-            background-color: #4caf50;
+            background-color: #3498db;
             color: #fff;
             cursor: pointer;
         }
@@ -109,16 +120,21 @@
             text-align: center;
         }
         footer {
-            background: linear-gradient(to bottom, #3498db, #2c3e50);
-            color: white;
+            background-color: black;
+            color: #fff;
             text-align: center;
-            padding: 10px;
+            padding: 20px;
             position: fixed;
             bottom: 0;
             width: 100%;
         }
+
+        footer p {
+            margin: 0;
+            font-size: 14px;
+        }
         #Spacesection {
-            margin-bottom: 120px;
+            margin-bottom: 100px;
         }
     </style>
 </head>
@@ -126,7 +142,7 @@
 <body>
     <section>
         <div class="Bgimg">
-            <p class="ElectronicsShop">Electronics Shop</p>
+            <p class="ElectronicsShop">Gaming Shop</p>
         </div>
         <?php
             include "Commondiv.php";

@@ -6,30 +6,59 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="Website4.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300&display=swap" rel="stylesheet">
     <style>
-        body {
+      body {
             margin: 0;
             padding: 0;
-            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva,
-                Verdana, sans-serif;
-            background-color: #f5f5f5;
+            font-family: 'Josefin Sans', sans-serif; /* Updated font */
+            background-color: black;
         }
 
         .Bgimg {
-            background: linear-gradient(to bottom, #3498db, #2c3e50);
-            color: black;
-            text-align: center;
-            padding: 20px;
-        }
+            background: black; /* Add your pattern background */
+    color: white;
+    text-align: center;
+    padding: 50px;
+    position: relative;
+    overflow: hidden; /* Hide overflowing content */
+}
+
+.Bgimg::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0.2; /* Adjust the opacity of the pattern */
+}
+
 
         .ElectronicsShop {
             font-size: 100px;
             margin: 0;
+            background-color: #000; /* Set the background color to black */
+            color: #3498db; /* Set the text color to blue */
+            padding: 20px; /* Add some padding for better visibility */
+            border-radius: 10px; /* Add rounded corners */
+            animation: colorChange 5s infinite alternate; /* Add animation */
         }
-
+        
+        @keyframes colorChange {
+            0% {
+                background-color: #000;
+                color: #3498db;
+            }
+            100% {
+                background-color: #3498db;
+                color: #000;
+            }
+        }
         section {
-            background: linear-gradient(to bottom, #3498db, #2c3e50);
-            padding: 20px;
+            background: black;
         }
 
         .top-nav {
@@ -76,13 +105,18 @@
         }
 
         footer {
-            background: linear-gradient(to bottom, #3498db, #2c3e50);
-            color: white;
+            background-color: black;
+            color: #fff;
             text-align: center;
-            padding: 10px;
+            padding: 20px;
             position: fixed;
             bottom: 0;
             width: 100%;
+        }
+
+        footer p {
+            margin: 0;
+            font-size: 14px;
         }
     </style>
     <title></title>
@@ -104,8 +138,6 @@
             ElectronicsShop was established with a simple idea: all customers should get high-quality electronic
             products with ease.</p>
         <img src="../Media/Electronic.png" class="Electronic" alt="Electronic">
-        <h2 class="Welcome2">Our products</h2>
-        <p class="AboutText2">We offer a wide range of Printers, Storage Media, and USB Components</p>
     </section>
     <footer>
         <p>HTML Babajic Kenan 2022</p>
