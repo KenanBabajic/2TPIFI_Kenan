@@ -40,7 +40,7 @@
         .ElectronicsShop {
             font-size: 100px;
             margin: 0;
-            background-color: #000; /* Set the background color to black */
+            background-color: black; /* Set the background color to black */
             color: #3498db; /* Set the text color to blue */
             padding: 20px; /* Add some padding for better visibility */
             border-radius: 10px; /* Add rounded corners */
@@ -181,7 +181,7 @@ while (!feof($handle)) {
             <div class="product-details">
                 <div>Name: <?=$product[0]; ?></div>
                 <div>Price: <?=$product[3]; ?></div>
-                <div>Description:<?= ($language=="EN") ? $product[1] : $product[5] ?></div>
+                <div>Description:<?= ($language=="EN") ? $product[1] : $product[4] ?></div>
                 <button id="BuyShop">Buy</button>
 
             </div>

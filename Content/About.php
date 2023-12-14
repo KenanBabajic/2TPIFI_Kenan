@@ -125,7 +125,7 @@
 <body>
     <section>
         <div class="Bgimg">
-            <p class="ElectronicsShop">Electronics Shop</p>
+            <p class="ElectronicsShop">Gaming Shop</p>
         </div>
         <?php include "Commondiv.php";
         topnav(2, $language);

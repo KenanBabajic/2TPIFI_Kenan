@@ -117,6 +117,31 @@
             margin: 0;
             font-size: 14px;
         }
+        div.scroll-container {
+  background-color: black;
+  overflow: auto;
+  white-space: nowrap;
+  padding: 10px;
+  height: 450px;
+  border-top: 1px solid white;
+  border-bottom: 1px solid white;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+overflow: hidden;
+}
+
+div.scroll-container img {
+  height: 400px;
+}
+img {
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+
+}
+img:hover {
+    transform: scale(1.2); /* Slightly smaller size when selected */
+
+}
     </style>
     <title></title>
 </head>
@@ -124,23 +149,21 @@
 <body>
     <section>
         <div class="Bgimg">
-            <p class="ElectronicsShop">Electronics Shop</p>
+            <p class="ElectronicsShop">Gaming Shop</p>
         </div>
         <?php include "Commondiv.php"; 
         topnav(1, $language);
         ?>
     </section>
     <section>
+    
+        <div class="scroll-container">
         <p class="Welcome">All of your components in one place</p>
-        <div class="HomeContent">
-            <img src="MSI.png" alt="Microsd 64Gb">
-            <img src="../Media/Printing.png" alt="Printer">
-            <img src="../Media/246546_be5mej.png" alt="NOVOO 12IN1 USB 3.0">
-        </div>
-        <p class="Welcome">We are passionate about delivering top-of-the-line computer components and accessories to enhance your computing experience. Explore our extensive collection of high-quality products designed to meet the demands of modern technology enthusiasts.</p>
-        <p class="Welcome">We sell : Gaming computers, Gaming monitors and much more</p>
-
-
+      
+    <img src="600.png">
+    <img src="24inch.png">
+    <img src="OdysseyG62.png">
+</div>
     </section>
     <footer>
         <p>HTML Babajic Kenan 2022</p>
