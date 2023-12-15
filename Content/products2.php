@@ -1,3 +1,4 @@
+<?php include "Commondiv.php"; ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -159,12 +160,12 @@
 <body>
     <section>
         <div class="Bgimg">
-            <p class="ElectronicsShop">Gaming Shop</p>
+            <p class="ElectronicsShop"><?=($ArrayOfStrings["CommonShopName"]);?></p>
         </div>
-        <?php include "Commondiv.php";
+        <?php
         topnav(4, $language);
         ?>
-    </section>
+        </section>
     <section id="Spacesection">
     <div class="AllProducts">
 
@@ -179,10 +180,10 @@ while (!feof($handle)) {
         <div class="OneProduct">
             <img src="<?=$product[2]; ?>" alt="Product Image">
             <div class="product-details">
-                <div>Name: <?=$product[0]; ?></div>
-                <div>Price: <?=$product[3]; ?></div>
-                <div>Description:<?= ($language=="EN") ? $product[1] : $product[4] ?></div>
-                <button id="BuyShop">Buy</button>
+                <div><?=($ArrayOfStrings["ProductsName"]);?> <?=$product[0]; ?></div>
+                <div><?=($ArrayOfStrings["ProductsPrice"]);?> <?=$product[3]; ?></div>
+                <div><?=($ArrayOfStrings["ProductsDescription"]);?> <?= $product[1];?></div>
+                <button id="BuyShop"><?=($ArrayOfStrings["ProductsBuy"]);?></button>
 
             </div>
         </div>
