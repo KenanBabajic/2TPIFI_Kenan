@@ -3,6 +3,16 @@ $language = "EN";
 if (isset($_GET["lang"])) {
         $language = $_GET["lang"];
 }
+
+$ArrayOfStrings = [];
+$fileHandle = fopen("Translations.csv", "r");
+while (!feof($fileHandle)) {
+        $OneLine = fgets($fileHandle);
+        $ArrayOfExplodedStrings = explode(";", $OneLine);
+        if (count($ArrayOfExplodedStrings) == 3) {
+                $ArrayOfStrings[$ArrayOfExplodedStrings[0]] = $language == "EN" ? $ArrayOfExplodedStrings[1] : $ArrayOfExplodedStrings[2];
+        }
+}
 function topnav($activePage, $language)
 {
         // global $languge; //bad option !!
@@ -66,9 +76,11 @@ function topnav($activePage, $language)
                         <?php
                 }
                 ?>
+
         </div>
 
-<?php
+        <?php
+
 
 }
 ?>

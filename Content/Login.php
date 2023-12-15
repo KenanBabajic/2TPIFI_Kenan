@@ -1,3 +1,4 @@
+<?php include "Commondiv.php"; ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -150,12 +151,12 @@ opacity: 0.2; /* Adjust the opacity of the pattern */
 <body>
     <section>
         <div class="Bgimg">
-            <p class="ElectronicsShop">Gaming Shop</p>
-        </div>
-        <?php
-            include "Commondiv.php";
+            <p class="ElectronicsShop"><?=($ArrayOfStrings["CommonShopName"]);?></p>
+            </div>
+            <?php
             topnav(5, $language);
-        ?>
+            ?>
+       
     </section>
     <section>
 
@@ -175,7 +176,7 @@ opacity: 0.2; /* Adjust the opacity of the pattern */
                     $userLine = fgets($fileHandle);
                     $userData = explode(";", $userLine);
                     if ($userData[0] == $username) {
-                        $registrationMessage = "Username already taken. Please choose another one.";
+                        $registrationMessage = $ArrayOfStrings["UsernameTaken"];
                         break;
                     }
                 }
@@ -187,7 +188,7 @@ opacity: 0.2; /* Adjust the opacity of the pattern */
                     $newLineForUser = $username . ";" . $password . "\n";
                     fputs($fileHandle, $newLineForUser);
                     fclose($fileHandle);
-                    $registrationMessage = "Registration successful.";
+                    $registrationMessage = $ArrayOfStrings["RegistrationSuccessful"];
                 }
             }
 
@@ -204,9 +205,9 @@ opacity: 0.2; /* Adjust the opacity of the pattern */
                     $userData = explode(";", $userLine);
                     if ($userData[0] == $username) {
                         if (trim($userData[1]) == $password) {
-                            $loginMessage = "Congratulations, you have successfully logged in!";
+                            $loginMessage = $ArrayOfStrings["SuccessfulLogin"];
                         } else {
-                            $loginMessage = "Wrong password. Please try again.";
+                            $loginMessage = $ArrayOfStrings["WrongPassword"];
                         }
                         break;
                     }
@@ -214,17 +215,17 @@ opacity: 0.2; /* Adjust the opacity of the pattern */
                 fclose($fileHandle);
 
                 if (empty($loginMessage)) {
-                    $loginMessage = "Invalid username or password. Please try again.";
+                    $loginMessage = $ArrayOfStrings["InvalidUsernamePassword"];
                 }
             }
         ?>
 
         <!-- Registration Form -->
         <form method="POST">
-            <h2>User Registration</h2>
-            <input type="text" name="UserName" placeholder="Username" required>
-            <input type="password" name="Password" placeholder="Password" required>
-            <input type="submit" value="Register" name="register">
+            <h2><?=($ArrayOfStrings["UserRegistrationHeader"]);?></h2>
+            <input type="text" name="UserName" placeholder="<?=($ArrayOfStrings["UserUsername"]);?>" required>
+            <input type="password" name="Password" placeholder="<?=($ArrayOfStrings["UserPassword"]);?>" required>
+            <input type="submit" value="<?=($ArrayOfStrings["UserRegistrationPegister"]);?>" name="register">
             <div class="message">
                 <?php echo $registrationMessage; ?>
             </div>
@@ -232,10 +233,10 @@ opacity: 0.2; /* Adjust the opacity of the pattern */
 
         <!-- Login Form -->
         <form method="POST"  id="Spacesection">
-            <h2>User Login</h2>
-            <input type="text" name="UserName" placeholder="Username" required>
-            <input type="password" name="Password" placeholder="Password" required>
-            <input type="submit" value="Login" name="login">
+            <h2><?=($ArrayOfStrings["UserLoginHeader"]);?></h2>
+            <input type="text" name="UserName" placeholder="<?=($ArrayOfStrings["UserUsername"]);?>" required>
+            <input type="password" name="Password" placeholder="<?=($ArrayOfStrings["UserPassword"]);?>" required>
+            <input type="submit" value="<?=($ArrayOfStrings["UserLoginLogin"]);?>" name="login">
             <div class="message">
                 <?php echo $loginMessage; ?>
             </div>

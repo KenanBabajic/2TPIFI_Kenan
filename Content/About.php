@@ -1,3 +1,4 @@
+<?php include "Commondiv.php";?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -124,20 +125,18 @@
 
 <body>
     <section>
-        <div class="Bgimg">
-            <p class="ElectronicsShop">Gaming Shop</p>
+    <div class="Bgimg">
+            <p class="ElectronicsShop"><?=($ArrayOfStrings["CommonShopName"]);?></p>
         </div>
-        <?php include "Commondiv.php";
+        <?php
         topnav(2, $language);
-        ?>
+?>
     </section>
     <section>
-        <h2 class="Welcome2">Electronics Shop - Your Electronics Marketplace #1</h2>
-        <p class="AboutText">ElectronicsShop is an electronics marketplace of unique and creative products. <br>
-            You must be wondering how we differ from other marketplaces? <br>
-            ElectronicsShop was established with a simple idea: all customers should get high-quality electronic
-            products with ease.</p>
-        <img src="../Media/Electronic.png" class="Electronic" alt="Electronic">
+    
+        <h2 class="Welcome2"><?=($ArrayOfStrings["AboutHeader"]);?></h2>
+        <p class="AboutText"><?=($ArrayOfStrings["AboutText"]);?></p>
+        <img src="AboutImage.png" class="Electronic" alt="Electronic">
     </section>
     <footer>
         <p>HTML Babajic Kenan 2022</p>

@@ -1,3 +1,4 @@
+<?php include "Commondiv.php"; ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -174,21 +175,22 @@ padding: 20px;
 </head>
 
 <body>
-    <section>
+
+    <section>      
         <div class="Bgimg">
-            <p class="ElectronicsShop">Gaming Shop</p>
+            <p class="ElectronicsShop"><?=($ArrayOfStrings["CommonShopName"]);?></p>
         </div>
-        <?php include "Commondiv.php";    
+        <?php
         topnav(3, $language);
         ?>
     </section>
     <section id="Spacesection">
     <section class="section2">
-        <p class="welcome">Contact us:</p>
+        <p class="welcome"><?=($ArrayOfStrings["ContactHeader"]);?></p>
         <address class="address">
-            <p>Our address: 50 Rue de Beggen, 1220 Luxembourg</p>
-            <p>Our email: <a id="link" href="mailto:electronicsshopKenanBabajic@gmail.com">electronicsshopKenanBabajic@gmail.com</a>.</p>
-            <p>Our phone number: <a id="link" href="tel:691242042222">691 242 042 222</a></p>
+            <p><?=($ArrayOfStrings["ContactAddress"]);?>: 50 Rue de Beggen, 1220 Luxembourg</p>
+            <p><?=($ArrayOfStrings["ContactEmail"]);?>: <a id="link" href="mailto:electronicsshopKenanBabajic@gmail.com">electronicsshopKenanBabajic@gmail.com</a>.</p>
+            <p><?=($ArrayOfStrings["ContactPhoneNumber"]);?>:<a id="link" href="tel:691242042222">691 242 042 222</a></p>
         </address>
         <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d10336.120780609705!2d6.1349077!3d49.6348855!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xdf0b2f1f4e71633b!2sLyc%C3%A9e%20Priv%C3%A9%20Emile%20Metz!5e0!3m2!1sde!2slu!4v1651656582603!5m2!1sde!2slu"
             allowfullscreen; loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>

@@ -1,3 +1,5 @@
+<?php include "Commondiv.php"; ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -149,16 +151,16 @@ img:hover {
 <body>
     <section>
         <div class="Bgimg">
-            <p class="ElectronicsShop">Gaming Shop</p>
+            <p class="ElectronicsShop"><?=($ArrayOfStrings["CommonShopName"]);?></p>
         </div>
-        <?php include "Commondiv.php"; 
+        <?php
         topnav(1, $language);
-        ?>
+?>
     </section>
     <section>
     
         <div class="scroll-container">
-        <p class="Welcome">All of your components in one place</p>
+        <p class="Welcome"><?=($ArrayOfStrings["HomeHeader"]);?></p>
       
     <img src="600.png">
     <img src="24inch.png">
