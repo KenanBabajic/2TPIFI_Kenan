@@ -22,4 +22,14 @@ RegistrationSuccessful;Registration successful.;Inscription réussi.
 SuccessfulLogin;Congratulations, you have successfully logged in!;Félicitations, vous êtes connecté avec succès !
 WrongPassword;Wrong password. Please try again.;Mauvais mot de passe. Veuillez réessayer.
 InvalidUsernamePassword;Invalid username or password. Please try again.;Nom d'utilisateur ou mot de passe invalide. Veuillez réessayer.
+AddProducts;Add Products;Ajoutez des produits
+AddProducts-ProductName;Product name : ;Nom du produit : 
+AddProducts-ProductDescription;Product description : ;Description du produit : 
+AddProducts-ProductImage;Product image URL : ;URL de l'image du produit : 
+AddProducts-ProductPrice;Product price : ;Prix ​​du produit : 
+AddProducts-Addbutton;Add product;Ajouter un produit
+
+
+
+
 

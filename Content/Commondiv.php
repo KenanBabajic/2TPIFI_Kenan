@@ -65,6 +65,15 @@ function topnav($activePage, $language)
                         else
                                 print "Connexion"; ?>
                 </a>
+                <a class="<?php if ($activePage == 6)
+                        print("active");
+                else
+                        print("inactive"); ?>" href="AddProducts.php?lang=<?= $language ?>">
+                        <?php if ($language == "EN")
+                                print "Products Management";
+                        else
+                                print "Management de produits"; ?>
+                </a>
                 <?php
                 if ($language == "EN") {
                         ?>

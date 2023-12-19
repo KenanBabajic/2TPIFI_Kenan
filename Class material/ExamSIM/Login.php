@@ -12,17 +12,17 @@
     <?php
     $visibleform = true;
 
-    if (isset($_POST["UserName"]) && $_POST["Password"]) {
-        $visibleform = false;
-        $userisvalid = false;
-        $fileHandle = fopen("User.txt", "r");
-        while (!feof($fileHandle)) {
-            $userLine = fgets($fileHandle);
-            $userData = explode(";", $userLine);
-            if ($userData[0] == $_POST["UserName"] && $userData[1] == $_POST["Password"]) {
-                $userisvalid = true;
+        if (isset($_POST["UserName"]) && $_POST["Password"]) {
+            $visibleform = false;
+            $userisvalid = false;
+            $fileHandle = fopen("User.txt", "r");
+            while (!feof($fileHandle)) {
+                $userLine = fgets($fileHandle);
+                $userData = explode(";", $userLine);
+                if ($userData[0] == $_POST["UserName"] && $userData[1] == $_POST["Password"]) {
+                    $userisvalid = true;
+                }
             }
-        }
         fclose($fileHandle);
         if ($userisvalid) {
             $userisvalid = true;

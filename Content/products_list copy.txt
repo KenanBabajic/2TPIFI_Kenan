@@ -6,5 +6,3 @@ HP OMEN 45L GT22-1004ng, Intel® Core™ i9 Processor 32 GB RAM 2 TB SSD NVIDIA 
 MEMORY PC Intel Core I7-10700F, Intel® Core™ i7 Prozessor 32 GB RAM 1000 GB SSD NVIDIA GeForce RTX™ 3060,HPOmen2.png,939.99€
 MSI PC gamer MAG Infinite,Intel Core i7-13700F,MSI2.png,1100.99€
 MSI PC gamer MAG ,Ryzen 5 3600,MSI2.png,800.99€
-asa,asas,33,s€
-sds,342,ds,4€
