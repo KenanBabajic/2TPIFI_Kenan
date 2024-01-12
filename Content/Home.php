@@ -12,6 +12,29 @@
     <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300&display=swap" rel="stylesheet">
     <script src="Script.js"></script>
     <style>
+   
+
+        .Bgimg {
+            background: black; /* Add your pattern background */
+    color: white;
+    text-align: center;
+    padding: 50px;
+    position: relative;
+    overflow: hidden; /* Hide overflowing content */
+}
+
+.Bgimg::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0.2; /* Adjust the opacity of the pattern */
+}
+
+
         .ElectronicsShop {
             font-size: 100px;
             margin: 0;
