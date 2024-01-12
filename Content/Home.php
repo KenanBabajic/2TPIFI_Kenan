@@ -12,12 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300&display=swap" rel="stylesheet">
     <script src="Script.js"></script>
     <style>
-      body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Josefin Sans', sans-serif; /* Updated font */
-            background-color: black;
-        }
+   
 
         .Bgimg {
             background: black; /* Add your pattern background */
