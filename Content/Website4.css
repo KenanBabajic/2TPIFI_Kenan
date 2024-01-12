@@ -38,22 +38,15 @@ body {
     background-repeat: no-repeat;
     background-size: cover;
   }
-
   .ElectronicsShop {
-      text-align: center;
-    margin: 0;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     font-size: 100px;
-    color: white;
-    border-radius: 10%;
-border: 1px solid white;
-    box-shadow: 10px 10px 5px black;
-    font-family: Georgia, 'Times New Roman', Times, serif;
-    font-weight: bold;
-    }
+    margin: 0;
+    background-color: #000; /* Set the background color to black */
+    color: #3498db; /* Set the text color to blue */
+    padding: 20px; /* Add some padding for better visibility */
+    border-radius: 10px; /* Add rounded corners */
+    animation: colorChange 5s infinite alternate; /* Add animation */
+}
 
     .Welcome {
       margin: 0;
