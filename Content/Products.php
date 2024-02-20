@@ -178,7 +178,7 @@ while (!feof($handle)) {
   if(count($product) < 3) continue; // Skip lines that don't have all 4 fields
 ?>
         <div class="OneProduct">
-            <img src="<?=$product[2]; ?>" alt="Product Image">
+            <img src="Images/<?=$product[2]; ?>" alt="Product Image">
             <div class="product-details">
                 <div><?=($ArrayOfStrings["ProductsName"]);?> <?=$product[0]; ?></div>
                 <div><?=($ArrayOfStrings["ProductsPrice"]);?> <?=$product[3]; ?></div>

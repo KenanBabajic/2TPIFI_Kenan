@@ -7,7 +7,7 @@ body {
   
   .topnav {
     overflow: hidden;
-    background-color: black;
+    background-color: bl;
     border-bottom: 1px solid white;
     border-top: 1px solid black;
   }
@@ -38,27 +38,22 @@ body {
     background-repeat: no-repeat;
     background-size: cover;
   }
+
   .ElectronicsShop {
-    font-size: 100px;
+      text-align: center;
     margin: 0;
-    background-color: #000; /* Set the background color to black */
-    color: #3498db; /* Set the text color to blue */
-    padding: 20px; /* Add some padding for better visibility */
-    border-radius: 10px; /* Add rounded corners */
-    animation: colorChange 5s infinite alternate; /* Add animation */
-}
-
-@keyframes colorChange {
-  0% {
-      background-color: #000;
-      color: #3498db;
-  }
-  100% {
-      background-color: #3498db;
-      color: #000;
-  }
-}
-
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 100px;
+    color: white;
+    border-radius: 10%;
+border: 1px solid white;
+    box-shadow: 10px 10px 5px black;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-weight: bold;
+    }
 
     .Welcome {
       margin: 0;
@@ -202,5 +197,4 @@ body {
       border:1px solid #000; 
     }
 
-  
   

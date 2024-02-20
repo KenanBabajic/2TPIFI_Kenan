@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="Website4.css">
+    <link rel="stylesheet" href="Website4.css?val=<?=time(); ?>">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300&display=swap" rel="stylesheet">
     <style>
@@ -136,7 +136,7 @@
     
         <h2 class="Welcome2"><?=($ArrayOfStrings["AboutHeader"]);?></h2>
         <p class="AboutText"><?=($ArrayOfStrings["AboutText"]);?></p>
-        <img src="AboutImage.png" class="Electronic" alt="Electronic">
+        <img src="Images/AboutImage.png" class="Electronic" alt="Electronic">
     </section>
     <footer>
         <p>HTML Babajic Kenan 2022</p>
