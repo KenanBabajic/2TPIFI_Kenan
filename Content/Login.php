@@ -1,11 +1,34 @@
-<?php include "Commondiv.php"; ?>
+<?php include "Commondiv.php";
+session_start();
+if (isset($_SESSION["UserLoggedIn"])) {
+    //Leave it as it is...
+} else {
+    //If there is no flag
+    $_SESSION["UserLoggedIn"] = false;
+} // This marks if the user is logged in or not.
+
+// WE ARE SURE that there is a flag
+if (isset($_POST["UserName"])) {
+    $_SESSION["UserLoggedIn"] = true;
+    $_SESSION["UserName"] = $_POST["UserName"];
+}
+
+if (isset($_POST["Logout"])) {
+    $_SESSION["UserLoggedIn"] = false;
+    session_unset();
+    session_destroy();
+    header("Refresh:0");
+    die();
+
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="Website4.css?val=<?=time(); ?>">
+    <link rel="stylesheet" href="Website4.css?val=<?= time(); ?>">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300&display=swap" rel="stylesheet">
     <title>User Registration and Login</title>
@@ -13,52 +36,62 @@
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Josefin Sans', sans-serif; /* Updated font */
-            background-color:black;
+            font-family: 'Josefin Sans', sans-serif;
+            /* Updated font */
+            background-color: black;
         }
 
 
-.Bgimg {
-    background: black; /* Add your pattern background */
-color: white;
-text-align: center;
-padding: 50px;
-position: relative;
-overflow: hidden; /* Hide overflowing content */
-}
+        .Bgimg {
+            background: black;
+            /* Add your pattern background */
+            color: white;
+            text-align: center;
+            padding: 50px;
+            position: relative;
+            overflow: hidden;
+            /* Hide overflowing content */
+        }
 
-.Bgimg::before {
-content: '';
-position: absolute;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-z-index: -1;
-opacity: 0.2; /* Adjust the opacity of the pattern */
-}
+        .Bgimg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.2;
+            /* Adjust the opacity of the pattern */
+        }
 
 
-.ElectronicsShop {
-    font-size: 100px;
-    margin: 0;
-    background-color: #000; /* Set the background color to black */
-    color: #3498db; /* Set the text color to blue */
-    padding: 20px; /* Add some padding for better visibility */
-    border-radius: 10px; /* Add rounded corners */
-    animation: colorChange 5s infinite alternate; /* Add animation */
-}
+        .ElectronicsShop {
+            font-size: 100px;
+            margin: 0;
+            background-color: #000;
+            /* Set the background color to black */
+            color: #3498db;
+            /* Set the text color to blue */
+            padding: 20px;
+            /* Add some padding for better visibility */
+            border-radius: 10px;
+            /* Add rounded corners */
+            animation: colorChange 5s infinite alternate;
+            /* Add animation */
+        }
 
-@keyframes colorChange {
-    0% {
-        background-color: #000;
-        color: #3498db;
-    }
-    100% {
-        background-color: #3498db;
-        color: #000;
-    }
-}
+        @keyframes colorChange {
+            0% {
+                background-color: #000;
+                color: #3498db;
+            }
+
+            100% {
+                background-color: #3498db;
+                color: #000;
+            }
+        }
 
         section {
             background: black;
@@ -103,7 +136,8 @@ opacity: 0.2; /* Adjust the opacity of the pattern */
         }
 
         form:hover {
-            transform: scale(0.95); /* Slightly smaller size when selected */
+            transform: scale(0.95);
+            /* Slightly smaller size when selected */
 
         }
 
@@ -128,6 +162,7 @@ opacity: 0.2; /* Adjust the opacity of the pattern */
         h2 {
             text-align: center;
         }
+
         footer {
             background-color: black;
             color: #fff;
@@ -142,6 +177,7 @@ opacity: 0.2; /* Adjust the opacity of the pattern */
             margin: 0;
             font-size: 14px;
         }
+
         #Spacesection {
             margin-bottom: 100px;
         }
@@ -151,97 +187,115 @@ opacity: 0.2; /* Adjust the opacity of the pattern */
 <body>
     <section>
         <div class="Bgimg">
-            <p class="ElectronicsShop"><?=($ArrayOfStrings["CommonShopName"]);?></p>
-            </div>
-            <?php
-            topnav(5, $language);
-            ?>
-       
+            <p class="ElectronicsShop">
+                <?= ($ArrayOfStrings["CommonShopName"]); ?>
+            </p>
+        </div>
+        <?php
+        topnav(5, $language);
+        ?>
+
     </section>
     <section>
 
         <?php
-            $registrationMessage = '';
-            $loginMessage = '';
+        $registrationMessage = '';
+        $loginMessage = '';
 
-            // Registration logic
-            if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["register"])) {
-                $username = $_POST["UserName"];
-                $password = $_POST["Password"];
+        // Registration logic
+        if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["register"])) {
+            $username = $_POST["UserName"];
+            $password = $_POST["Password"];
 
-                // Check if the username is NOT already taken
-                $fileHandle = fopen("User.txt", "r");
+            // Check if the username is NOT already taken
+            $fileHandle = fopen("User.txt", "r");
 
-                while (!feof($fileHandle)) {
-                    $userLine = fgets($fileHandle);
-                    $userData = explode(";", $userLine);
-                    if ($userData[0] == $username) {
-                        $registrationMessage = $ArrayOfStrings["UsernameTaken"];
-                        break;
-                    }
-                }
-                fclose($fileHandle);
-
-                // If the username is unique, register the user
-                if (empty($registrationMessage)) {
-                    $fileHandle = fopen("User.txt", "a");
-                    $newLineForUser = $username . ";" . $password . "\n";
-                    fputs($fileHandle, $newLineForUser);
-                    fclose($fileHandle);
-                    $registrationMessage = $ArrayOfStrings["RegistrationSuccessful"];
+            while (!feof($fileHandle)) {
+                $userLine = fgets($fileHandle);
+                $userData = explode(";", $userLine);
+                if ($userData[0] == $username) {
+                    $registrationMessage = $ArrayOfStrings["UsernameTaken"];
+                    break;
                 }
             }
+            fclose($fileHandle);
 
-            // Login logic
-            if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["login"])) {
-                $username = $_POST["UserName"];
-                $password = $_POST["Password"];
-
-                // Check if the entered username and password match any user in the file
-                $fileHandle = fopen("User.txt", "r");
-
-                while (!feof($fileHandle)) {
-                    $userLine = fgets($fileHandle);
-                    $userData = explode(";", $userLine);
-                    if ($userData[0] == $username) {
-                        if (trim($userData[1]) == $password) {
-                            $loginMessage = $ArrayOfStrings["SuccessfulLogin"];
-                        } else {
-                            $loginMessage = $ArrayOfStrings["WrongPassword"];
-                        }
-                        break;
-                    }
-                }
+            // If the username is unique, register the user
+            if (empty($registrationMessage)) {
+                $fileHandle = fopen("User.txt", "a");
+                $newLineForUser = $username . ";" . $password . "\n";
+                fputs($fileHandle, $newLineForUser);
                 fclose($fileHandle);
+                $registrationMessage = $ArrayOfStrings["RegistrationSuccessful"];
+            }
+        }
 
-                if (empty($loginMessage)) {
-                    $loginMessage = $ArrayOfStrings["InvalidUsernamePassword"];
+        // Login logic
+        if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["login"])) {
+            $username = $_POST["UserName"];
+            $password = $_POST["Password"];
+
+            // Check if the entered username and password match any user in the file
+            $fileHandle = fopen("User.txt", "r");
+
+            while (!feof($fileHandle)) {
+                $userLine = fgets($fileHandle);
+                $userData = explode(";", $userLine);
+                if ($userData[0] == $username) {
+                    if (trim($userData[1]) == $password) {
+                        $loginMessage = $ArrayOfStrings["SuccessfulLogin"];
+                    } else {
+                        $loginMessage = $ArrayOfStrings["WrongPassword"];
+                    }
+                    break;
                 }
             }
+            fclose($fileHandle);
+
+            if (empty($loginMessage)) {
+                $loginMessage = $ArrayOfStrings["InvalidUsernamePassword"];
+            }
+        }
+        if (!$_SESSION["UserLoggedIn"]  && !isset($_POST["login"]) && !$_SERVER["REQUEST_METHOD"] === "POST") {
+            ?>
+            <!-- Registration Form -->
+            <form method="POST">
+                <h2>
+                    <?= ($ArrayOfStrings["UserRegistrationHeader"]); ?>
+                </h2>
+                <input type="text" name="UserName" placeholder="<?= ($ArrayOfStrings["UserUsername"]); ?>" required>
+                <input type="password" name="Password" placeholder="<?= ($ArrayOfStrings["UserPassword"]); ?>" required>
+                <input type="submit" value="<?= ($ArrayOfStrings["UserRegistrationPegister"]); ?>" name="register">
+                <div class="message">
+                    <?php echo $registrationMessage; ?>
+                </div>
+            </form>
+
+            <!-- Login Form -->
+            <form method="POST" id="Spacesection">
+                <h2>
+                    <?= ($ArrayOfStrings["UserLoginHeader"]); ?>
+                </h2>
+                <input type="text" name="UserName" placeholder="<?= ($ArrayOfStrings["UserUsername"]); ?>" required>
+                <input type="password" name="Password" placeholder="<?= ($ArrayOfStrings["UserPassword"]); ?>" required>
+                <input type="submit" value="<?= ($ArrayOfStrings["UserLoginLogin"]); ?>" name="login">
+                <div class="message">
+                    <?php echo $loginMessage; ?>
+                </div>
+            </form>
+            <?php
+        }  else if ($_SESSION["UserLoggedIn"]  && isset($_POST["login"]) && $_SERVER["REQUEST_METHOD"] === "POST") {
+
+            ?>
+                <h1>Welcome back,
+                <?= $_SESSION["UserName"] ?>
+                </h1>
+                <form method="POST">
+                    <input type="submit" name="Logout" value="Logout">
+                </form>
+            <?php
+        }
         ?>
-
-        <!-- Registration Form -->
-        <form method="POST">
-            <h2><?=($ArrayOfStrings["UserRegistrationHeader"]);?></h2>
-            <input type="text" name="UserName" placeholder="<?=($ArrayOfStrings["UserUsername"]);?>" required>
-            <input type="password" name="Password" placeholder="<?=($ArrayOfStrings["UserPassword"]);?>" required>
-            <input type="submit" value="<?=($ArrayOfStrings["UserRegistrationPegister"]);?>" name="register">
-            <div class="message">
-                <?php echo $registrationMessage; ?>
-            </div>
-        </form>
-
-        <!-- Login Form -->
-        <form method="POST"  id="Spacesection">
-            <h2><?=($ArrayOfStrings["UserLoginHeader"]);?></h2>
-            <input type="text" name="UserName" placeholder="<?=($ArrayOfStrings["UserUsername"]);?>" required>
-            <input type="password" name="Password" placeholder="<?=($ArrayOfStrings["UserPassword"]);?>" required>
-            <input type="submit" value="<?=($ArrayOfStrings["UserLoginLogin"]);?>" name="login">
-            <div class="message">
-                <?php echo $loginMessage; ?>
-            </div>
-        </form>
-
     </section>
     <footer>
         <p>HTML Babajic Kenan 2022</p>
