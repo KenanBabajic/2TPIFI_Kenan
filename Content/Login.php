@@ -8,9 +8,37 @@ if (isset($_SESSION["UserLoggedIn"])) {
 } // This marks if the user is logged in or not.
 
 // WE ARE SURE that there is a flag
-if (isset($_POST["UserName"])) {
-    $_SESSION["UserLoggedIn"] = true;
-    $_SESSION["UserName"] = $_POST["UserName"];
+if (isset($_POST["UserName"]) && $_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["login"])) {
+    $username = $_POST["UserName"];
+    $password = $_POST["Password"];
+    $loginMessage = '';
+        $fileHandle = fopen("User.txt", "r");
+
+    while (!feof($fileHandle)) {
+        $userLine = fgets($fileHandle);
+        $userData = explode(";", $userLine);
+        if ($userData[0] == $username) {
+            if (trim($userData[1]) == $password) {
+                $loginMessage = $ArrayOfStrings["SuccessfulLogin"];
+                $_SESSION["UserLoggedIn"] = true;
+                $_SESSION["UserName"] = $_POST["UserName"];
+            } else {
+                $_SESSION["UserLoggedIn"] = false;
+                $Loginfalse = true;
+
+            }
+            break;
+
+        }
+       
+
+        if (empty($loginMessage)) {
+            $_SESSION["UserLoggedIn"] = false;
+            $Loginfalse = true;
+
+        }
+    }
+    fclose($fileHandle);
 }
 
 if (isset($_POST["Logout"])) {
@@ -181,6 +209,10 @@ if (isset($_POST["Logout"])) {
         #Spacesection {
             margin-bottom: 100px;
         }
+
+        h1 {
+            color: white;
+        }
     </style>
 </head>
 
@@ -204,8 +236,8 @@ if (isset($_POST["Logout"])) {
 
         // Registration logic
         if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["register"])) {
-            $username = $_POST["UserName"];
-            $password = $_POST["Password"];
+            $username = $_POST["UserNameRegistration"];
+            $password = $_POST["PasswordRegistration"];
 
             // Check if the username is NOT already taken
             $fileHandle = fopen("User.txt", "r");
@@ -231,40 +263,18 @@ if (isset($_POST["Logout"])) {
         }
 
         // Login logic
-        if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["login"])) {
-            $username = $_POST["UserName"];
-            $password = $_POST["Password"];
-
-            // Check if the entered username and password match any user in the file
-            $fileHandle = fopen("User.txt", "r");
-
-            while (!feof($fileHandle)) {
-                $userLine = fgets($fileHandle);
-                $userData = explode(";", $userLine);
-                if ($userData[0] == $username) {
-                    if (trim($userData[1]) == $password) {
-                        $loginMessage = $ArrayOfStrings["SuccessfulLogin"];
-                    } else {
-                        $loginMessage = $ArrayOfStrings["WrongPassword"];
-                    }
-                    break;
-                }
-            }
-            fclose($fileHandle);
-
-            if (empty($loginMessage)) {
-                $loginMessage = $ArrayOfStrings["InvalidUsernamePassword"];
-            }
-        }
-        if (!$_SESSION["UserLoggedIn"]  && !isset($_POST["login"]) && !$_SERVER["REQUEST_METHOD"] === "POST") {
+        
+        if (!$_SESSION["UserLoggedIn"]) {
             ?>
             <!-- Registration Form -->
             <form method="POST">
                 <h2>
                     <?= ($ArrayOfStrings["UserRegistrationHeader"]); ?>
                 </h2>
-                <input type="text" name="UserName" placeholder="<?= ($ArrayOfStrings["UserUsername"]); ?>" required>
-                <input type="password" name="Password" placeholder="<?= ($ArrayOfStrings["UserPassword"]); ?>" required>
+                <input type="text" name="UserNameRegistration" placeholder="<?= ($ArrayOfStrings["UserUsername"]); ?>"
+                    required>
+                <input type="password" name="PasswordRegistration" placeholder="<?= ($ArrayOfStrings["UserPassword"]); ?>"
+                    required>
                 <input type="submit" value="<?= ($ArrayOfStrings["UserRegistrationPegister"]); ?>" name="register">
                 <div class="message">
                     <?php echo $registrationMessage; ?>
@@ -280,19 +290,26 @@ if (isset($_POST["Logout"])) {
                 <input type="password" name="Password" placeholder="<?= ($ArrayOfStrings["UserPassword"]); ?>" required>
                 <input type="submit" value="<?= ($ArrayOfStrings["UserLoginLogin"]); ?>" name="login">
                 <div class="message">
-                    <?php echo $loginMessage; ?>
+                    <?php
+                if($Loginfalse = true) {
+                
+                $loginMessage = $ArrayOfStrings["WrongPassword"];
+                echo $loginMessage;
+
+                }
+                ?>
                 </div>
             </form>
             <?php
-        }  else if ($_SESSION["UserLoggedIn"]  && isset($_POST["login"]) && $_SERVER["REQUEST_METHOD"] === "POST") {
+        } else {
 
             ?>
-                <h1>Welcome back,
+            <h1>Welcome back,
                 <?= $_SESSION["UserName"] ?>
-                </h1>
-                <form method="POST">
-                    <input type="submit" name="Logout" value="Logout">
-                </form>
+            </h1>
+            <form method="POST">
+                <input type="submit" name="Logout" value="Logout">
+            </form>
             <?php
         }
         ?>
