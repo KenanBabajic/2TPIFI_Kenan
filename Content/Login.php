@@ -6,37 +6,40 @@ if (isset($_SESSION["UserLoggedIn"])) {
     //If there is no flag
     $_SESSION["UserLoggedIn"] = false;
 } // This marks if the user is logged in or not.
-
+$messageForIncorrectLoging = false;
 // WE ARE SURE that there is a flag
 if (isset($_POST["UserName"]) && $_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["login"])) {
+    //print ("Trying login");
     $username = $_POST["UserName"];
     $password = $_POST["Password"];
     $loginMessage = '';
-        $fileHandle = fopen("User.txt", "r");
+    $fileHandle = fopen("User.txt", "r");
 
     while (!feof($fileHandle)) {
         $userLine = fgets($fileHandle);
         $userData = explode(";", $userLine);
         if ($userData[0] == $username) {
+            //print("User found");
             if (trim($userData[1]) == $password) {
+                //print("Password ok");
                 $loginMessage = $ArrayOfStrings["SuccessfulLogin"];
                 $_SESSION["UserLoggedIn"] = true;
                 $_SESSION["UserName"] = $_POST["UserName"];
             } else {
+                //print("Password not ok");
                 $_SESSION["UserLoggedIn"] = false;
-                $Loginfalse = true;
-
+                $messageForIncorrectLoging = true;
             }
             break;
 
         }
        
 
-        if (empty($loginMessage)) {
+       /* if (empty($loginMessage)) {
             $_SESSION["UserLoggedIn"] = false;
-            $Loginfalse = true;
+            $messageForIncorrectLoging = true;
 
-        }
+        }*/
     }
     fclose($fileHandle);
 }
@@ -291,11 +294,11 @@ if (isset($_POST["Logout"])) {
                 <input type="submit" value="<?= ($ArrayOfStrings["UserLoginLogin"]); ?>" name="login">
                 <div class="message">
                     <?php
-                if($Loginfalse = true) {
+
+                if($messageForIncorrectLoging == true) {
                 
                 $loginMessage = $ArrayOfStrings["WrongPassword"];
                 echo $loginMessage;
-
                 }
                 ?>
                 </div>
