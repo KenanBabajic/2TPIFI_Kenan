@@ -170,12 +170,56 @@
     <div class="AllProducts">
 
         <?php
+        /*
 $handle = fopen('products_list.txt', 'r');
 
 while (!feof($handle)) {
   $line = fgets($handle); // Read one line of text from the csv
   $product = explode(',', $line); // Assuming products are separated by commas in your file
   if(count($product) < 3) continue; // Skip lines that don't have all 4 fields
+  */
+// Establish a connection to the database
+$servername = "localhost";
+$username = "root"; // Your MySQL username
+$password = ""; // Your MySQL password
+$dbname = "Websitedatabase"; // Your MySQL database name
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Fetch data from the Products table
+$sql = "SELECT * FROM Products";
+$result = $conn->query($sql);
+
+// Display products
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        ?>
+        <div class="OneProduct">
+        <img src="<?php echo $row["Image"]; ?>" alt="<?php echo $row["Product_Name"]; ?>" style="max-width: 300px;">
+        <div class="product-details">
+            <?php echo $row["Product_Name"]; ?>
+            <div><strong>Description:</strong> <?php echo $row["Description"]; ?></div>
+            <div><strong>Price:</strong> <?php echo $row["Price"]; ?>€</div>
+            <div><button id="BuyShop"><?=($ArrayOfStrings["ProductsBuy"]);?></button></div>
+
+            </div>
+
+        </div>
+        <?php
+    }
+} else {
+    echo "0 results";
+}
+
+// Close connection
+$conn->close();
+?>
+<?php
+/*
 ?>
         <div class="OneProduct">
             <img src="Images/<?=$product[2]; ?>" alt="Product Image">
@@ -193,6 +237,9 @@ while (!feof($handle)) {
 //Close the file
 fclose($handle);
 ?>
+*/
+?>
+
     </div>
     </section>
     <footer>
