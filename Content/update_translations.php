@@ -1,51 +1,45 @@
-<?php
-// Database connection parameters
-$servername = "localhost";  // Change this to your database server
-$username = "root";      // Change this to your database username
-$password = "";      // Change this to your database password
-$dbname = "Translationsdata";   // Change this to your database name
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-// Query to select all translations
-$sql = "SELECT StringName, DescriptionEN, DescriptionFR FROM Translations";
-$result = $conn->query($sql);
-
-// Check if there are any results
-if ($result->num_rows > 0) {
-    // Store translations in an associative array
-    $translations = array();
+<!DOCTYPE html>
+<html lang="en">
+    <?php
+    include_once("commondiv.php");
+    ?>
+ 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Connect</title>
+</head>
+ 
+<body>
+    <?php
+ 
+    //Goal 1: Connect to the database
+    $connection = new mysqli("localhost", "root", "", "Websitedatabase"); //Connect the Query
+   
+    // $connection = mysql_connect ('localhost', 'root', '', ;test2024);
+    // if (!$connection) { die ("Error creating connections");}
+   
+    //Goal 2: select data from the database table and display it
+    $sqlQuery = $connection->prepare("SELECT * FROM Translations"); //Creat a Query
+    if (!$sqlQuery)
+        die("SQL Error: " . $connection->error); //Check for Errors (if any)
+    $sqlQuery->execute(); //Execute the Query
+    $result = $sqlQuery->get_result(); //Get the Result
     while ($row = $result->fetch_assoc()) {
-        $translations[$row['StringName']] = array(
-            'en' => $row['DescriptionEN'],
-            'fr' => $row['DescriptionFR']
-        );
+        ?>
+        <div>
+            <?php
+            if ($l)
+            ?>
+            <?= $row["DescriptionEN"] ?>
+
+            <?= $row["DescriptionFR"] ?>
+        </div>
+        <?php
     }
-
-    // Close the database connection
-    $conn->close();
-
-    // Read the SQL file
-    $sql_file_path = 'Translations.sql';  // Change this to the path of your SQL file
-    $sql_content = file_get_contents($sql_file_path);
-
-    // Replace translations in the SQL file
-    foreach ($translations as $stringName => $translation) {
-        $sql_content = str_replace("'$stringName'", "'" . addslashes($translation['en']) . "'", $sql_content);
-        $sql_content = str_replace("'$stringName'", "'" . addslashes($translation['fr']) . "'", $sql_content);
-    }
-
-    // Save the modified SQL file
-    file_put_contents($sql_file_path, $sql_content);
-
-    echo "Translations replaced successfully in the SQL file.";
-} else {
-    echo "No translations found in the database.";
-}
-
+ 
+ 
+    ?>
+</body>
+ 
+</html>
