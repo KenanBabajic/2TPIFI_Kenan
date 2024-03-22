@@ -12,7 +12,7 @@
  
 <body>
     <?php
- 
+ /*
     //Goal 1: Connect to the database
     $connection = new mysqli("localhost", "root", "", "Websitedatabase"); //Connect the Query
    
@@ -26,20 +26,18 @@
     $sqlQuery->execute(); //Execute the Query
     $result = $sqlQuery->get_result(); //Get the Result
     while ($row = $result->fetch_assoc()) {
-        ?>
-        <div>
-            <?php
-            if ($l)
-            ?>
-            <?= $row["DescriptionEN"] ?>
-
-            <?= $row["DescriptionFR"] ?>
-        </div>
-        <?php
+            if ($language =="EN")
+            {
+                $ArrayOfStrings[$row["StringName"]] = $row["DescriptionEN"];
+            }
+            else
+            {
+                $ArrayOfStrings[$row["StringName"]] = $row["DescriptionFR"];
+            }            
     }
  
  
     ?>
 </body>
  
-</html>
+</html>*/

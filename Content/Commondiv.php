@@ -4,7 +4,7 @@ if (isset($_GET["lang"])) {
         $language = $_GET["lang"];
 }
 
-$ArrayOfStrings = [];
+/*$ArrayOfStrings = [];
 $fileHandle = fopen("Translations.csv", "r");
 while (!feof($fileHandle)) {
         $OneLine = fgets($fileHandle);
@@ -13,6 +13,7 @@ while (!feof($fileHandle)) {
                 $ArrayOfStrings[$ArrayOfExplodedStrings[0]] = $language == "EN" ? $ArrayOfExplodedStrings[1] : $ArrayOfExplodedStrings[2];
         }
 }
+*/
 function topnav($activePage, $language)
 {
         // global $languge; //bad option !!
@@ -92,9 +93,28 @@ function topnav($activePage, $language)
 
 
 }
-?>
 
-<?php
+    //Goal 1: Connect to the database
+        $connection = new mysqli("localhost", "root", "", "Websitedatabase"); //Connect the Query
+
+
+//Goal 2: select data from the database table and display it
+    $sqlQuery = $connection->prepare("SELECT * FROM Translations"); //Creat a Query
+    if (!$sqlQuery)
+        die("SQL Error: " . $connection->error); //Check for Errors (if any)
+    $sqlQuery->execute(); //Execute the Query
+    $result = $sqlQuery->get_result(); //Get the Result
+    while ($row = $result->fetch_assoc()) {
+            if ($language =="EN")
+            {
+                $ArrayOfStrings[$row["StringName"]] = $row["DescriptionEN"];
+            }
+            else
+            {
+                $ArrayOfStrings[$row["StringName"]] = $row["DescriptionFR"];
+            }            
+    }
+
 
 /*
 $language = "EN";
