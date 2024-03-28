@@ -1,86 +1,37 @@
-<?php 
+<?php
 include "Commondiv.php";
 session_start();
 
-// Initialize variables
-$messageForIncorrectLoging = false;
-$registrationMessage = '';
-
-// Check if user is logged in
 if (!isset($_SESSION["UserLoggedIn"])) {
     $_SESSION["UserLoggedIn"] = false;
 }
+
+$messageForIncorrectLoging = false;
+$loginMessage = ''; // Initialize login message variable
 
 // Login logic
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["login"])) {
     $username = $_POST["UserName"];
     $password = $_POST["Password"];
+    $fileHandle = fopen("User.txt", "r");
 
-    // Connect to the database
-    $conn = new mysqli("localhost", "root", "", "Websitedatabase");
-
-    // Check connection
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
-
-    // Check if the username and password match
-    $stmt = $conn->prepare("SELECT * FROM Users WHERE UserName = ?");
-    $stmt->bind_param("s", $username);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $stmt->close();
-
-    if ($result->num_rows > 0) {
-        $user = $result->fetch_assoc();
-        if ($user["Password"] === $password) {
-            $_SESSION["UserLoggedIn"] = true;
-            $_SESSION["UserName"] = $username;
-        } else {
-            $messageForIncorrectLoging = true;
+    while (!feof($fileHandle)) {
+        $userLine = fgets($fileHandle);
+        $userData = explode(";", $userLine);
+        if ($userData[0] == $username) {
+            if (trim($userData[1]) == $password) {
+                $loginMessage = $ArrayOfStrings["SuccessfulLogin"];
+                $_SESSION["UserLoggedIn"] = true;
+                $_SESSION["UserName"] = $_POST["UserName"];
+            } else {
+                $loginMessage = $ArrayOfStrings["WrongPassword"]; // Set message for incorrect password
+                $_SESSION["UserLoggedIn"] = false;
+                $messageForIncorrectLoging = true;
+            }
+            break;
         }
-    } else {
-        $messageForIncorrectLoging = true;
     }
-
-    $conn->close();
-}
-
-// Registration logic
-if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["register"])) {
-    $username = $_POST["UserNameRegistration"];
-    $password = $_POST["PasswordRegistration"];
-
-    // Connect to the database
-    $conn = new mysqli("localhost", "root", "", "Websitedatabase");
-
-    // Check connection
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
-
-    // Check if the username is NOT already taken
-    $stmt = $conn->prepare("SELECT * FROM Users WHERE UserName = ?");
-    $stmt->bind_param("s", $username);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $stmt->close();
-
-    if ($result->num_rows > 0) {
-        $registrationMessage = "Username is already taken.";
-    } else {
-        // Insert the new user into the database
-        $stmt = $conn->prepare("INSERT INTO Users (UserName, Password, Role) VALUES (?, ?, 'Guest')");
-        $stmt->bind_param("ss", $username, $password);
-        if ($stmt->execute()) {
-            $registrationMessage = "Registration successful.";
-        } else {
-            $registrationMessage = "Error: " . $conn->error;
-        }
-        $stmt->close();
-    }
-
-    $conn->close();
+    fclose($fileHandle);
 }
 
 // Logout logic
@@ -88,8 +39,39 @@ if (isset($_POST["Logout"])) {
     $_SESSION["UserLoggedIn"] = false;
     session_unset();
     session_destroy();
-    header("Location: login.php"); // Redirect to login page after logout
-    exit();
+    header("Refresh:0");
+    die();
+}
+
+$registrationMessage = '';
+
+// Registration logic
+if ($_SERVER["REQUEST_METHOD"] === "POST" && (isset($_POST["register_normal"]) || isset($_POST["register_admin"]))) {
+    $username = $_POST["UserNameRegistration"];
+    $password = $_POST["PasswordRegistration"];
+    $role = isset($_POST["register_normal"]) ? "Normal" : "Admin"; // Determine role based on button clicked
+
+    // Check if the username is NOT already taken
+    $fileHandle = fopen("User.txt", "r");
+
+    while (!feof($fileHandle)) {
+        $userLine = fgets($fileHandle);
+        $userData = explode(";", $userLine);
+        if ($userData[0] == $username) {
+            $registrationMessage = $ArrayOfStrings["UsernameTaken"];
+            break;
+        }
+    }
+    fclose($fileHandle);
+
+    // If the username is unique, register the user
+    if (empty($registrationMessage)) {
+        $fileHandle = fopen("User.txt", "a");
+        $newLineForUser = $username . ";" . $password . ";" . $role . "\n"; // Include role in the data
+        fputs($fileHandle, $newLineForUser);
+        fclose($fileHandle);
+        $registrationMessage = $ArrayOfStrings["RegistrationSuccessful"];
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -267,37 +249,41 @@ if (isset($_POST["Logout"])) {
         </div>
         <?php
         topnav(5, $language);
-        ?>
+        ?><!-- Registration Form -->
+        <div>
+            <form method="POST">
+                <h2><?= $ArrayOfStrings["UserRegistrationHeader"]; ?></h2>
+                <input type="text" name="UserNameRegistration" placeholder="<?= $ArrayOfStrings["UserUsername"]; ?>" required>
+                <input type="password" name="PasswordRegistration" placeholder="<?= $ArrayOfStrings["UserPassword"]; ?>" required>
+                <input type="submit" value="Register as Normal User" name="register_normal">
+                <input type="submit" value="Register as Admin" name="register_admin">
+                <div class="message"><?= $registrationMessage; ?></div>
+            </form>
+        </div>
+        
+      <!-- Login Form -->
+<div class="login-form">
+    <form method="POST" id="Spacesection">
+        <h2><?= $ArrayOfStrings["UserLoginHeader"]; ?></h2>
+        <input type="text" name="UserName" placeholder="<?= $ArrayOfStrings["UserUsername"]; ?>" required>
+        <input type="password" name="Password" placeholder="<?= $ArrayOfStrings["UserPassword"]; ?>" required>
+        <input type="submit" value="<?= $ArrayOfStrings["UserLoginLogin"]; ?>" name="login">
+        <div class="message">
+            <?php
+            if ($messageForIncorrectLoging == true) {
+                echo $loginMessage; // Display login message for incorrect login
+            } elseif (!empty($loginMessage)) {
+                echo $loginMessage; // Display login message for successful login
+            }
+            ?>
+        </div>
+    </form>
+</div>
 
     </section>
     <section>
-
-    
-
-          <?php if (!$_SESSION["UserLoggedIn"]) : ?>
-            <!-- Registration Form -->
-            <form method="POST">
-                <h2><?= ($ArrayOfStrings["UserRegistrationHeader"]); ?></h2>
-                <input type="text" name="UserNameRegistration" placeholder="<?= ($ArrayOfStrings["UserUsername"]); ?>" required>
-                <input type="password" name="PasswordRegistration" placeholder="<?= ($ArrayOfStrings["UserPassword"]); ?>" required>
-                <input type="submit" value="<?= ($ArrayOfStrings["UserRegistrationPegister"]); ?>" name="register">
-                <div class="message"><?= $registrationMessage; ?></div>
-            </form>
-
-            <!-- Login Form -->
-            <form method="POST" id="Spacesection">
-                <h2><?= ($ArrayOfStrings["UserLoginHeader"]); ?></h2>
-                <input type="text" name="UserName" placeholder="<?= ($ArrayOfStrings["UserUsername"]); ?>" required>
-                <input type="password" name="Password" placeholder="<?= ($ArrayOfStrings["UserPassword"]); ?>" required>
-                <input type="submit" value="<?= ($ArrayOfStrings["UserLoginLogin"]); ?>" name="login">
-                <div class="message"><?= $messageForIncorrectLoging ? $ArrayOfStrings["WrongPassword"] : ""; ?></div>
-            </form>
-        <?php else : ?>
-            <h1>Welcome back, <?= $_SESSION["UserName"] ?></h1>
-            <form method="POST">
-                <input type="submit" name="Logout" value="Logout">
-            </form>
-        <?php endif; ?>
+    </div>
+</form>
 
 </script>
 

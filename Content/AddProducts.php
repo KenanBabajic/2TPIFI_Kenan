@@ -1,4 +1,41 @@
-<?php include "Commondiv.php"; ?>
+<?php include "Commondiv.php";
+session_start();
+
+// Check if user is logged in
+if (!isset($_SESSION["UserLoggedIn"]) || $_SESSION["UserLoggedIn"] !== true) {
+    // Redirect user to login page if not logged in
+    header("Location: login.php");
+    exit();
+}
+
+// Connect to the database
+$conn = new mysqli("localhost", "root", "", "Websitedatabase");
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Check if user is an admin
+$username = $_SESSION["UserName"];
+$stmt = $conn->prepare("SELECT Role FROM Users WHERE UserName = ?");
+$stmt->bind_param("s", $username);
+$stmt->execute();
+$stmt->bind_result($userRole);
+$stmt->fetch();
+$stmt->close();
+
+// Check if user has admin role
+if ($userRole !== 'Admin') {
+    // Redirect user to unauthorized page if not an admin
+    header("Location: unauthorized.php");
+    exit();
+}
+
+// Your AddProducts.php content here...
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 

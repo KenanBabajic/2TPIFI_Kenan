@@ -59,6 +59,16 @@ INSERT INTO Translations (StringName, DescriptionEN, DescriptionFR) VALUES
 ('AddProducts-ProductPrice', 'Product price : ', 'Prix ​​du produit : '),
 ('AddProducts-Addbutton', 'Add product', 'Ajouter un produit');
 
+CREATE TABLE Users (
+    UserName VARCHAR(255) PRIMARY KEY,
+    Password VARCHAR(255) NOT NULL,
+    Role ENUM('Admin', 'Guest') NOT NULL
+);
+
+INSERT INTO Users (UserName, Password, Role) VALUES ('admin', 'adminpassword', 'Admin');
+
+
 -- Display the inserted values
 SELECT * FROM Products;
 SELECT * FROM Translations;
+SELECT * FROM Users;
