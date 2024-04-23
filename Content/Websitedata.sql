@@ -60,15 +60,34 @@ INSERT INTO Translations (StringName, DescriptionEN, DescriptionFR) VALUES
 ('AddProducts-Addbutton', 'Add product', 'Ajouter un produit');
 
 CREATE TABLE Users (
-    UserName VARCHAR(255) PRIMARY KEY,
+    UserId int not null primary key auto_increment,
+    UserName VARCHAR(255) unique,
     Password VARCHAR(255) NOT NULL,
     Role ENUM('Admin', 'Guest') NOT NULL
 );
 
-INSERT INTO Users (UserName, Password, Role) VALUES ('admin', 'adminpassword', 'Admin');
+Create TABLE Orders (
+    OrderId int not null primary key auto_increment,
+    UserId int not null,
+    FOREIGN KEY(UserId) REFERENCES Users(UserId)
+)
+
+Create TABLE List (
+    IdListItem int not null primary key auto_increment,
+    OrderId int not null,
+    Product_ID int not null,
+    CountOfItemsBought int not null,
+    FOREIGN KEY (OrderId) REFERENCES Orders(OrderId),
+    FOREIGN KEY (Product_ID) REFERENCES Products(Product_ID)
+
+)
+INSERT INTO Users (UserId, UserName, Password, Role) VALUES ('1', 'admin', 'adminpassword', 'Admin');
 
 
 -- Display the inserted values
 SELECT * FROM Products;
 SELECT * FROM Translations;
 SELECT * FROM Users;
+SELECT * FROM List;
+SELECT * FROM Orders;
+
