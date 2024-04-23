@@ -83,6 +83,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["register"])) {
     $conn->close();
 }
 
+
 // Logout logic
 if (isset($_POST["Logout"])) {
     $_SESSION["UserLoggedIn"] = false;
