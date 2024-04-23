@@ -27,6 +27,7 @@ $stmt->close();
 
 // Check if user has admin role
 if ($userRole !== 'Admin') {
+    
     // Redirect user to unauthorized page if not an admin
     header("Location: unauthorized.php");
     exit();
