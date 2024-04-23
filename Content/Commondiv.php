@@ -78,6 +78,21 @@ function topnav($activePage, $language)
                                 print "Management de produits"; ?>
                 </a>
                 <?php
+                if(isset($_SESSION["UserLoggedIn"])) {
+                        ?>
+                <a class="<?php if ($activePage == 7)
+                        print("active");
+                else
+                        print("inactive"); ?>" href="ShoppingCart.php?lang=<?= $language ?>">
+                        <?php if ($language == "EN")
+                                print "Shopping Cart";
+                        else
+                                print "Carte de Shopping"; ?>
+                </a>
+                <?php
+                }
+                ?>
+                <?php
 
         ?>
 
@@ -121,6 +136,22 @@ function topnav($activePage, $language)
             }            
     }
 
+    if(isset($_SESSON["UserLoggedIn"])) {
+        if (!isset($_SESSION["ShoppingCart"])) {
+                $_SESSION["ShoppingCart"] = [];
+        }
+        if(isset($_POST["boughtItem"])) {
+                if(isset($_SESSION["ShoppingCart"][$_POST["boughtItem"]])) {
+
+                
+                $_SESSION["ShoppingCart"][$_POST["boughtItem"]]++;
+        } 
+        else
+        {
+                $_SESSION["ShoppingCart"][$_POST["boughtItem"]]=1;
+        }
+    }
+    }
 
 /*
 $language = "EN";

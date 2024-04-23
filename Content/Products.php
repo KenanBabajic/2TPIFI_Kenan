@@ -204,6 +204,10 @@ if ($result->num_rows > 0) {
             <?php echo $row["Product_Name"]; ?>
             <div><strong>Description:</strong> <?php echo $row["Description"]; ?></div>
             <div><strong>Price:</strong> <?php echo $row["Price"]; ?>€</div>
+            <form method="POST">
+                <input name="boughtItem" value="<?=$row["Product_ID"]?>" type="hidden">
+<input type="submit" value="BUY">
+            </form>
             <div><button id="BuyShop"><?=($ArrayOfStrings["ProductsBuy"]);?></button></div>
 
             </div>
