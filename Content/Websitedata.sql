@@ -70,7 +70,7 @@ Create TABLE Orders (
     OrderId int not null primary key auto_increment,
     UserId int not null,
     FOREIGN KEY(UserId) REFERENCES Users(UserId)
-)
+);
 
 Create TABLE List (
     IdListItem int not null primary key auto_increment,
@@ -80,14 +80,15 @@ Create TABLE List (
     FOREIGN KEY (OrderId) REFERENCES Orders(OrderId),
     FOREIGN KEY (Product_ID) REFERENCES Products(Product_ID)
 
-)
+);
+
 INSERT INTO Users (UserId, UserName, Password, Role) VALUES ('1', 'admin', 'adminpassword', 'Admin');
 
 
 -- Display the inserted values
-SELECT * FROM Products;
-SELECT * FROM Translations;
-SELECT * FROM Users;
-SELECT * FROM List;
-SELECT * FROM Orders;
+-- SELECT * FROM Products;
+-- SELECT * FROM Translations;
+-- SELECT * FROM Users;
+-- SELECT * FROM List;
+-- SELECT * FROM Orders;
 

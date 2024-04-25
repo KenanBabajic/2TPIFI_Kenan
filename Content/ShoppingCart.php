@@ -1,5 +1,7 @@
 <?php include "Commondiv.php"; ?>
-<?php include "Home.php"; ?>
+<?php 
+//include "Home.php"; 
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -11,7 +13,7 @@
 </head>
 <body>
     <?php
-        topnav(7, $language);
+       // topnav(7, $language);
 
     if(!isset($_SESSION["UserLoggedIn"])) {
         die("Forbidden, can't be here");

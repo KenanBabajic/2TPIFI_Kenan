@@ -1,8 +1,16 @@
 <?php
+session_start();
 $language = "EN";
 if (isset($_GET["lang"])) {
         $language = $_GET["lang"];
 }
+
+
+// Check if user is logged in
+if (!isset($_SESSION["UserLoggedIn"])) {
+        $_SESSION["UserLoggedIn"] = false;
+    }
+    
 
 /*$ArrayOfStrings = [];
 $fileHandle = fopen("Translations.csv", "r");
@@ -67,7 +75,10 @@ function topnav($activePage, $language)
                                 print "Connexion"; ?>
                 </a>
                 <?php
+                if ($_SESSION["UserLoggedIn"])
+                {
                         ?>
+
                 <a class="<?php if ($activePage == 6)
                         print("active");
                 else
@@ -77,8 +88,10 @@ function topnav($activePage, $language)
                         else
                                 print "Management de produits"; ?>
                 </a>
+
                 <?php
-                if(isset($_SESSION["UserLoggedIn"])) {
+                }
+                if($_SESSION["UserLoggedIn"]) {
                         ?>
                 <a class="<?php if ($activePage == 7)
                         print("active");

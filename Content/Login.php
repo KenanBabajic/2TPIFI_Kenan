@@ -1,6 +1,6 @@
 <?php 
 include "Commondiv.php";
-session_start();
+
 
 // Initialize variables
 $messageForIncorrectLoging = false;
