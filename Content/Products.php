@@ -194,6 +194,11 @@ if ($conn->connect_error) {
 $sql = "SELECT * FROM Products";
 $result = $conn->query($sql);
 
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['buy'])) {
+    $productID = $_POST['productID'];
+    $quantity = 1; 
+    $_SESSION['cart'][$productID] = isset($_SESSION['cart'][$productID]) ? $_SESSION['cart'][$productID] + $quantity : $quantity;
+}
 // Display products
 if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
@@ -205,8 +210,8 @@ if ($result->num_rows > 0) {
             <div><strong>Description:</strong> <?php echo $row["Description"]; ?></div>
             <div><strong>Price:</strong> <?php echo $row["Price"]; ?>€</div>
             <form method="POST">
-                <input name="boughtItem" value="<?=$row["Product_ID"]?>" type="hidden">
-<input type="submit" value="BUY">
+    <input name="productID" value="<?php echo $row["Product_ID"]; ?>" type="hidden">
+    <input type="submit" name="buy" value="BUY">
             </form>
             <div><button id="BuyShop"><?=($ArrayOfStrings["ProductsBuy"]);?></button></div>
 
@@ -218,6 +223,7 @@ if ($result->num_rows > 0) {
 } else {
     echo "0 results";
 }
+
 
 // Close connection
 $conn->close();

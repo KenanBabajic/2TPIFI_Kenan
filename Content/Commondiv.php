@@ -5,6 +5,19 @@ if (isset($_GET["lang"])) {
         $language = $_GET["lang"];
 }
 
+if(isset($_SESSION["UserLoggedIn"])) {
+        $loginStatus = "Logout";
+    } else {
+        $loginStatus = "Login";
+    }
+
+    if(isset($_SESSION["language"]) && $_SESSION["language"] == "EN") {
+        $loginText = "Login";
+        $logoutText = "Logout";
+        } else {
+$loginText = "Connexion";
+    $logoutText = "Déconnexion";
+        }
 
 // Check if user is logged in
 if (!isset($_SESSION["UserLoggedIn"])) {
