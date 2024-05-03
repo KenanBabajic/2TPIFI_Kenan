@@ -1,5 +1,9 @@
 <?php
 session_start();
+$totalItemsInCart = 0;
+if(isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
+    $totalItemsInCart = array_sum($_SESSION['cart']);
+}
 $language = "EN";
 if (isset($_GET["lang"])) {
         $language = $_GET["lang"];
@@ -133,7 +137,6 @@ function topnav($activePage, $language)
                         <?php
                 }
                 ?>
-
         </div>
 
         <?php

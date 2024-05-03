@@ -1,6 +1,7 @@
 <?php include "Commondiv.php";
     ?>
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -93,6 +94,19 @@
             margin: 0;
             font-size: 14px;
         }
+        #BuyShop {
+            width: 100px;
+            height: 50px;
+            border-radius: 10px;
+            background-color: #3498db;
+            border: none;
+            color: #fff;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
     </style>
 <body>
 <section>
@@ -110,6 +124,42 @@
     if(!isset($_SESSION["UserLoggedIn"])) {
         die("Forbidden, can't be here");
     }
+
+
+    // Assuming $_SESSION['cart'] contains the cart items
+    
+    // Loop through items in the cart
+   /* foreach ($_SESSION['cart'] as $productID => $quantity) {
+        // Fetch product details from the database based on $productID
+        $query = "SELECT * FROM Products WHERE Product_ID = $productID";
+        $result = mysqli_query($conn, $query);
+    
+        // Check if product exists
+        if (mysqli_num_rows($result) > 0) {
+            $row = mysqli_fetch_assoc($result);
+    
+            // Display product details
+            echo '<div class="OneProduct">';
+            echo '<img src="' . $row["Image"] . '" alt="' . $row["Product_Name"] . '" style="max-width: 300px;">';
+            echo '<div class="product-details">';
+            echo '<strong>' . $row["Product_Name"] . '</strong>';
+            echo '<div><strong>Description:</strong> ' . $row["Description"] . '</div>';
+            echo '<div><strong>Price:</strong> ' . $row["Price"] . '€</div>';
+            echo '<div>Quantity in Cart: ' . $quantity . '</div>';
+            // Add button to remove item from cart if needed
+            
+           
+        }
+    }
+    */
+    if(isset($_POST['removeAll'])) {
+        // Clear the entire cart
+        unset($_SESSION['cart']);
+    }
+?>
+
+ 
+<?php
     // Display shopping cart items
     if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
         echo "<h2>Shopping Cart:</h2>";
@@ -119,7 +169,14 @@
     } else {
         echo "Your shopping cart is empty.";
     }
-        ?>
+        if (!empty($_SESSION['cart'])) {
+?>
+           <form method="POST">
+    <button type="submit" name="removeAll" id="BuyShop">Remove All</button>
+    </form>
+    <?php
+    }
+    ?>
     </table>
 </body>
 </html>

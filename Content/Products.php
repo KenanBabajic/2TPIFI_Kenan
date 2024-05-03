@@ -136,6 +136,7 @@
             font-weight: bold;
             cursor: pointer;
             margin-top: 20px;
+            margin-bottom: 20px;
         }
         footer {
             background-color: black;
@@ -193,6 +194,10 @@ if ($conn->connect_error) {
 // Fetch data from the Products table
 $sql = "SELECT * FROM Products";
 $result = $conn->query($sql);
+$totalItemsInCart = 0;
+if(isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
+    $totalItemsInCart = array_sum($_SESSION['cart']);
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['buy'])) {
     $productID = $_POST['productID'];
@@ -202,6 +207,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['buy'])) {
 // Display products
 if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
+        $quantityInCart = 0;
+        if(isset($_SESSION['cart'][$row["Product_ID"]])) {
+            $quantityInCart = $_SESSION['cart'][$row["Product_ID"]];
+        }
+
         ?>
         <div class="OneProduct">
         <img src="<?php echo $row["Image"]; ?>" alt="<?php echo $row["Product_Name"]; ?>" style="max-width: 300px;">
@@ -211,10 +221,9 @@ if ($result->num_rows > 0) {
             <div><strong>Price:</strong> <?php echo $row["Price"]; ?>€</div>
             <form method="POST">
     <input name="productID" value="<?php echo $row["Product_ID"]; ?>" type="hidden">
-    <input type="submit" name="buy" value="BUY">
+    <input type="submit" name="buy" value="BUY" id="BuyShop" <?=($ArrayOfStrings["ProductsBuy"]);?>>
             </form>
-            <div><button id="BuyShop"><?=($ArrayOfStrings["ProductsBuy"]);?></button></div>
-
+            <div>Quantity in Cart: <?php echo $quantityInCart; ?></div>
             </div>
 
         </div>
