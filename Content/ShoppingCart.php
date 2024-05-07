@@ -121,6 +121,12 @@
 
     </section>
 <?php
+$servername = "localhost";
+$username = "root"; // Your MySQL username
+$password = ""; // Your MySQL password
+$dbname = "Websitedatabase"; // Your MySQL database name
+
+$db = new mysqli($servername, $username, $password, $dbname);
     if(!isset($_SESSION["UserLoggedIn"])) {
         die("Forbidden, can't be here");
     }
@@ -160,15 +166,6 @@
 
  
 <?php
-    // Display shopping cart items
-    if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
-        echo "<h2>Shopping Cart:</h2>";
-        foreach ($_SESSION['cart'] as $productID => $quantity) {
-            echo "Product ID: $productID, Quantity: $quantity <br>";
-        }
-    } else {
-        echo "Your shopping cart is empty.";
-    }
         if (!empty($_SESSION['cart'])) {
 ?>
            <form method="POST">
@@ -176,7 +173,36 @@
     </form>
     <?php
     }
+    // Display shopping cart items
+    if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
+        echo "<h2>Shopping Cart:</h2>";
+        foreach ($_SESSION['cart'] as $productID => $quantity) {
+            // Fetch product details from database
+            $query = "SELECT * FROM Products WHERE Product_ID = $productID";
+            $result = $db->query($query);
+
+            if ($result && $result->num_rows > 0) {
+                $row = $result->fetch_assoc();
+                $productName = $row['Product_Name'];
+                $productImage = $row['Image'];
+                $productPrice = $row['Price'];
+
+
+                // Display product details including image
+                echo "<div style='border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;'>";
+                echo "<img src='$productImage' alt='$productName' style='height: 400px;'>";
+                echo "<p>Product Name: $productName</p>";
+                echo "<p>Product Price: $productPrice Euros</p>";
+                echo "<p>Quantity: $quantity</p>";
+                echo "</div>";
+            }
+            
+        }
+    }
+    else {
+        echo "Your shopping cart is empty.";
+    }
+
     ?>
-    </table>
 </body>
 </html>

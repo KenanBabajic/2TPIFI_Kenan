@@ -173,18 +173,15 @@
         <?php
         /*
 $handle = fopen('products_list.txt', 'r');
-
 while (!feof($handle)) {
   $line = fgets($handle); // Read one line of text from the csv
   $product = explode(',', $line); // Assuming products are separated by commas in your file
   if(count($product) < 3) continue; // Skip lines that don't have all 4 fields
   */
-// Establish a connection to the database
-$servername = "localhost";
+  $servername = "localhost";
 $username = "root"; // Your MySQL username
 $password = ""; // Your MySQL password
 $dbname = "Websitedatabase"; // Your MySQL database name
-
 $conn = new mysqli($servername, $username, $password, $dbname);
 // Check connection
 if ($conn->connect_error) {
