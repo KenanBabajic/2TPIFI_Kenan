@@ -1,6 +1,60 @@
-<?php include "Commondiv.php";
-    ?>
+<?php
+include "Commondiv.php";
 
+// Establish database connection
+$servername = "localhost";
+$username = "root"; // Your MySQL username
+$password = ""; // Your MySQL password
+$dbname = "Websitedatabase"; // Your MySQL database name
+$db = new mysqli($servername, $username, $password, $dbname);
+
+if (!$db) {
+    die("Connection failed: " . mysqli_connect_error());
+}
+
+if (!isset($_SESSION["UserLoggedIn"])) {
+    die("Forbidden, can't be here");
+}
+
+// Check if an item needs to be removed from the cart
+if (isset($_POST["itemtodrop"])) {
+    $_SESSION['cart'][$_POST["itemtodrop"]]--;
+    if ($_SESSION['cart'][$_POST["itemtodrop"]] == 0) {
+        unset($_SESSION['cart'][$_POST["itemtodrop"]]);
+    }
+}
+
+// Handle removing all items from the cart
+if (isset($_POST['removeAll'])) {
+    unset($_SESSION['cart']);
+}
+
+// Handle placing the final order
+if (isset($_POST["FinalOrder"])) {
+    // Insert into Orders table
+    //$userId = $_SESSION["UserLoggedIn"];
+    $userName = $_SESSION["UserName"];
+    $insertOrderQuery = "INSERT INTO Orders (UserId) VALUES (SELECT UserId from Users where UserName=$userName)";
+    //$insertOrderQuery->bind_param("s",$username)
+
+        // Loop through items in the cart and insert into List table
+        foreach ($_SESSION['cart'] as $productID => $quantity) {
+            // Insert into List table
+            $insertListQuery = "INSERT INTO List (OrderId, Product_ID, CountOfItemsBought) VALUES ($orderId, $productID, $quantity)";
+            $db->query($insertListQuery);
+        }
+
+        // Clear the cart after placing the order
+        unset($_SESSION['cart']);
+
+        // Redirect to a thank you page or display a success message
+        echo "Thank you for your order!";
+    } else {
+        echo "Error: " . $insertOrderQuery . "<br>" . $db->error;
+    }
+?>
+
+    ?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -194,6 +248,12 @@ $db = new mysqli($servername, $username, $password, $dbname);
                 echo "<p>Product Name: $productName</p>";
                 echo "<p>Product Price: $productPrice Euros</p>";
                 echo "<p>Quantity: $quantity</p>";
+                ?>
+                <form method="POST">
+                <input type="hidden" name="itemtodrop" value="<?=$productID?>">
+                <input type="submit" value=<?= $quantity == 1 ? "Remove from cart" : "Decrease quantity" ?>">
+                </form>
+                <?php
                 echo "</div>";
             }
             
@@ -204,5 +264,9 @@ $db = new mysqli($servername, $username, $password, $dbname);
     }
 
     ?>
+    <form method="POST">
+    <input name="FinalOrder" value="Place order" type="submit">
+
+    </form>
 </body>
 </html>
