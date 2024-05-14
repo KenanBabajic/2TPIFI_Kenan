@@ -34,8 +34,12 @@ if (isset($_POST["FinalOrder"])) {
     // Insert into Orders table
     //$userId = $_SESSION["UserLoggedIn"];
     $userName = $_SESSION["UserName"];
-    $insertOrderQuery = "INSERT INTO Orders (UserId) VALUES (SELECT UserId from Users where UserName=$userName)";
-    //$insertOrderQuery->bind_param("s",$username)
+    $insertOrderQuery = "INSERT INTO Orders (UserId) VALUES (SELECT UserId from users where UserName=$userName)";
+    //$insertOrderQuery->bind_param("s",$username)č
+
+    if ($db->query($insertOrderQuery) === TRUE) {
+        // Get the generated OrderId
+        $orderId = $db->insert_id;
 
         // Loop through items in the cart and insert into List table
         foreach ($_SESSION['cart'] as $productID => $quantity) {
@@ -52,6 +56,7 @@ if (isset($_POST["FinalOrder"])) {
     } else {
         echo "Error: " . $insertOrderQuery . "<br>" . $db->error;
     }
+}
 ?>
 
     ?>
