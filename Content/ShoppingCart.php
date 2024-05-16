@@ -31,35 +31,46 @@ if (isset($_POST['removeAll'])) {
 
 // Handle placing the final order
 if (isset($_POST["FinalOrder"])) {
-    // Insert into Orders table
-    //$userId = $_SESSION["UserLoggedIn"];
-    $userName = $_SESSION["UserName"];
-    $insertOrderQuery = "INSERT INTO Orders (UserId) VALUES (SELECT UserId from users where UserName=$userName)";
-    //$insertOrderQuery->bind_param("s",$username)č
-
-    if ($db->query($insertOrderQuery) === TRUE) {
-        // Get the generated OrderId
-        $orderId = $db->insert_id;
-
-        // Loop through items in the cart and insert into List table
-        foreach ($_SESSION['cart'] as $productID => $quantity) {
-            // Insert into List table
-            $insertListQuery = "INSERT INTO List (OrderId, Product_ID, CountOfItemsBought) VALUES ($orderId, $productID, $quantity)";
-            $db->query($insertListQuery);
-        }
-
-        // Clear the cart after placing the order
-        unset($_SESSION['cart']);
-
-        // Redirect to a thank you page or display a success message
-        echo "Thank you for your order!";
+    if (empty($_SESSION['cart'])) {
+        echo "Your shopping cart is empty.";
     } else {
-        echo "Error: " . $insertOrderQuery . "<br>" . $db->error;
+        // Fetch the UserId based on the UserName
+        $userName = $_SESSION["UserName"];
+        $fetchUserIdQuery = "SELECT UserId FROM users WHERE UserName='$userName'";
+        $userIdResult = $db->query($fetchUserIdQuery);
+
+        if ($userIdResult) {
+            $userIdRow = $userIdResult->fetch_assoc();
+            $userId = $userIdRow['UserId'];
+
+            // Insert into Orders table with the fetched UserId
+            $insertOrderQuery = "INSERT INTO Orders (UserId) VALUES ('$userId')";
+
+            if ($db->query($insertOrderQuery) === TRUE) {
+                // Get the generated OrderId
+                $orderId = $db->insert_id;
+
+                // Loop through items in the cart and insert into List table
+                foreach ($_SESSION['cart'] as $productID => $quantity) {
+                    // Insert into List table
+                    $insertListQuery = "INSERT INTO List (OrderId, Product_ID, CountOfItemsBought) VALUES ($orderId, $productID, $quantity)";
+                    $db->query($insertListQuery);
+                }
+
+                // Clear the cart after placing the order
+                unset($_SESSION['cart']);
+
+                // Redirect to a thank you page or display a success message
+                echo "Thank you for your order!";
+            } else {
+                echo "Error: " . $insertOrderQuery . "<br>" . $db->error;
+            }
+        } else {
+            echo "Error fetching UserId: " . $db->error;
+        }
     }
 }
 ?>
-
-    ?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -256,7 +267,7 @@ $db = new mysqli($servername, $username, $password, $dbname);
                 ?>
                 <form method="POST">
                 <input type="hidden" name="itemtodrop" value="<?=$productID?>">
-                <input type="submit" value=<?= $quantity == 1 ? "Remove from cart" : "Decrease quantity" ?>">
+                <input type="submit" value=<?= $quantity == 1 ? "Remove from cart" : "Decrease quantity" ?>>
                 </form>
                 <?php
                 echo "</div>";

@@ -119,6 +119,15 @@ function topnav($activePage, $language)
                         else
                                 print "Carte de Shopping"; ?>
                 </a>
+                <a class="<?php if ($activePage == 8)
+                        print("active");
+                else
+                        print("inactive"); ?>" href="Orders.php?lang=<?= $language ?>">
+                        <?php if ($language == "EN")
+                                print "Orders";
+                        else
+                                print "Ordres"; ?>
+                </a>
                 <?php
                 }
                 ?>
