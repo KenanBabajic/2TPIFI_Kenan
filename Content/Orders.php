@@ -20,7 +20,6 @@ if(!isset($_SESSION["UserLoggedIn"])) {
 }
 
 // Fetch user's order history from the database view
-$userName = $_SESSION["UserName"];
 // Assuming $db is your mysqli connection
 // $stmt = $db->prepare("SELECT * FROM userstoproducts WHERE UserName = ?");
 //$stmt->bind_param("s", $_SESSION["UserName"]);
@@ -29,7 +28,7 @@ $userName = $_SESSION["UserName"];
 
 // Fetch data from the result set, display results, etc.
 
-$is_admin = false;
+/*$is_admin = false;
 if (isset($_SESSION["UserRole"]) && $_SESSION["UserRole"] === "Admin") {
     $is_admin = true;
 }
@@ -53,9 +52,28 @@ if (!$result) {
     echo "Error executing query: " . $db->error;
     exit;
 }
+*/
+$username = $_SESSION["UserName"];
+$stmt = $db->prepare("SELECT Role FROM Users WHERE UserName = ?");
+$stmt->bind_param("s", $username);
+$stmt->execute();
+$stmt->bind_result($userRole);
+$stmt->fetch();
+$stmt->close();
 
-// Display order history
-?>
+if ($userRole == 'Admin') {
+    $sql = "SELECT * FROM `userstoproducts`";
+    $result = $db->query($sql);
+} else {
+    $sql = "SELECT * FROM `userstoproducts` WHERE UserName = ?";
+    $stmt = $db->prepare($sql);
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $result = $stmt->get_result();
+}
+
+
+ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -187,20 +205,28 @@ if (!$result) {
         <!-- Add more columns as needed -->
     </tr>
     <?php
-    if ($result && $result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            echo "<tr>";
-            echo "<td>" . $row["UserName"] . "</td>";
-            echo "<td>" . $row["OrderId"] . "</td>";
-            echo "<td>" . $row["Product_Name"] . "</td>";
-            echo "<td>" . $row["CountOfItemsBought"] . "</td>";
-            echo "<td>" . $row["Price"] . "</td>";
-            // Add more columns as needed
-            echo "</tr>";
-        }
-    } else {
-        echo "<tr><td colspan='4'>No orders found.</td></tr>";
+    // Check if there are results and display them
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        echo "<tr>";
+        echo "<td>" . htmlspecialchars($row["UserName"]) . "</td>";
+        echo "<td>" . htmlspecialchars($row["OrderId"]) . "</td>";
+        echo "<td>" . htmlspecialchars($row["Product_Name"]) . "</td>";
+        echo "<td>" . htmlspecialchars($row["CountOfItemsBought"]) . "</td>";
+        echo "<td>" . htmlspecialchars($row["Price"]) . "</td>";
+        // Add more columns as needed
+        echo "</tr>";
     }
+} else {
+    echo "<tr><td colspan='4'>No orders found.</td></tr>";
+}
+
+// Close the result set if it was a prepared statement
+if ($userRole != 'Admin') {
+    $result->close();
+}
+
+
     ?>
 </table>
 </body>
