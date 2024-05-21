@@ -8,51 +8,17 @@ $password = ""; // Your MySQL password
 $dbname = "Websitedatabase"; // Your MySQL database name
 $db = new mysqli($servername, $username, $password, $dbname);
 
-if (!$db) {
-    die("Connection failed: " . mysqli_connect_error());
+if ($db->connect_error) {
+    die("Connection failed: " . $db->connect_error);
 }
 
 // Check if the user is logged in and has a valid UserId
-if(!isset($_SESSION["UserLoggedIn"])) {
+if (!isset($_SESSION["UserLoggedIn"])) {
     header("Location: login.php");
-
     exit;
 }
 
 // Fetch user's order history from the database view
-// Assuming $db is your mysqli connection
-// $stmt = $db->prepare("SELECT * FROM userstoproducts WHERE UserName = ?");
-//$stmt->bind_param("s", $_SESSION["UserName"]);
-//$stmt->execute();
-//$result = $stmt->get_result();
-
-// Fetch data from the result set, display results, etc.
-
-/*$is_admin = false;
-if (isset($_SESSION["UserRole"]) && $_SESSION["UserRole"] === "Admin") {
-    $is_admin = true;
-}
-
-// Construct SQL query based on user role
-if ($is_admin) {
-    // User is an admin, retrieve all orders
- $fetchUserIdQuery = "SELECT * FROM userstoproducts";
- 
-} else {
-    // User is not an admin, retrieve orders associated with their user ID
-    $stmt = $db->prepare("SELECT * FROM userstoproducts WHERE UserName = ?");
-    $stmt->bind_param("s", $_SESSION["UserName"]);
-    $stmt->execute();
-$result = $stmt->get_result();
-}
-
-
-// Check if query execution was successful
-if (!$result) {
-    echo "Error executing query: " . $db->error;
-    exit;
-}
-*/
 $username = $_SESSION["UserName"];
 $stmt = $db->prepare("SELECT Role FROM Users WHERE UserName = ?");
 $stmt->bind_param("s", $username);
@@ -62,70 +28,64 @@ $stmt->fetch();
 $stmt->close();
 
 if ($userRole == 'Admin') {
-    $sql = "SELECT * FROM `userstoproducts`";
+    $sql = "SELECT UserName, OrderId, Sum(CountOfItemsBought) as TotalItems from userstoproducts group by OrderId";
     $result = $db->query($sql);
 } else {
-    $sql = "SELECT * FROM `userstoproducts` WHERE UserName = ?";
+    $sql = "SELECT UserName, OrderId, Sum(CountOfItemsBought) as TotalItems from userstoproducts where UserName = ? group by OrderId";
     $stmt = $db->prepare($sql);
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $result = $stmt->get_result();
 }
-
-
- ?>
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<head>
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="Website4.css?val=<?=time(); ?>">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300&display=swap" rel="stylesheet">
-</head>
-</head>
-<style>
-      body {
+    <style>
+        body {
             margin: 0;
             padding: 0;
-            font-family: 'Josefin Sans', sans-serif; /* Updated font */
+            font-family: 'Josefin Sans', sans-serif;
             background-color: black;
             color: white;
         }
 
         .Bgimg {
-            background: black; /* Add your pattern background */
-    color: white;
-    text-align: center;
-    padding: 50px;
-    position: relative;
-    overflow: hidden; /* Hide overflowing content */
-}
+            background: black;
+            color: white;
+            text-align: center;
+            padding: 50px;
+            position: relative;
+            overflow: hidden;
+        }
 
-.Bgimg::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    opacity: 0.2; /* Adjust the opacity of the pattern */
-}
-
+        .Bgimg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.2;
+        }
 
         .ElectronicsShop {
             font-size: 100px;
             margin: 0;
-            background-color: #000; /* Set the background color to black */
-            color: #3498db; /* Set the text color to blue */
-            padding: 20px; /* Add some padding for better visibility */
-            border-radius: 10px; /* Add rounded corners */
-            animation: colorChange 5s infinite alternate; /* Add animation */
+            background-color: #000;
+            color: #3498db;
+            padding: 20px;
+            border-radius: 10px;
+            animation: colorChange 5s infinite alternate;
         }
-        
+
         @keyframes colorChange {
             0% {
                 background-color: #000;
@@ -168,6 +128,7 @@ if ($userRole == 'Admin') {
             margin: 0;
             font-size: 14px;
         }
+
         #BuyShop {
             width: 100px;
             height: 50px;
@@ -182,51 +143,79 @@ if ($userRole == 'Admin') {
             margin-bottom: 20px;
         }
     </style>
+</head>
 <body>
 <section>
-        <div class="Bgimg">
-            <p class="ElectronicsShop">
-                <?= ($ArrayOfStrings["CommonShopName"]); ?>
-            </p>
-        </div>
-        <?php
-        topnav(8, $language);
-        ?>
-
-    </section>
+    <div class="Bgimg">
+        <p class="ElectronicsShop">
+            <?= ($ArrayOfStrings["CommonShopName"]); ?>
+        </p>
+    </div>
+    <?php
+    topnav(8, $language);
+    ?>
+</section>
 <h1>Your Order History</h1>
 <table>
     <tr>
-    <th>User Name</th>
+        <th>User Name</th>
         <th>Order ID</th>
-        <th>Product Name</th>
-        <th>Quantity</th>
-        <th>Price</th>
+        <th>Total Items</th>
         <!-- Add more columns as needed -->
     </tr>
     <?php
     // Check if there are results and display them
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        echo "<tr>";
-        echo "<td>" . htmlspecialchars($row["UserName"]) . "</td>";
-        echo "<td>" . htmlspecialchars($row["OrderId"]) . "</td>";
-        echo "<td>" . htmlspecialchars($row["Product_Name"]) . "</td>";
-        echo "<td>" . htmlspecialchars($row["CountOfItemsBought"]) . "</td>";
-        echo "<td>" . htmlspecialchars($row["Price"]) . "</td>";
-        // Add more columns as needed
-        echo "</tr>";
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            echo "<tr>";
+            echo "<td>" . htmlspecialchars($row["UserName"]) . "</td>";
+            echo "<td>" . htmlspecialchars($row["OrderId"]) . "</td>";
+            echo "<td>" . htmlspecialchars($row["TotalItems"]) . "</td>";
+            ?>
+            <td>
+                <?php
+                if (isset($_POST["OrderId"]) && ($_POST["OrderId"] == $row["OrderId"])) {
+                    ?>
+                    <table>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Count</th>
+                            <!-- Add more columns as needed -->
+                        </tr>
+                        <?php
+                        $selectProducts = $db->prepare("SELECT Product_Name, CountOfItemsBought FROM userstoproducts WHERE OrderId = ?");
+                        $selectProducts->bind_param("i", $_POST["OrderId"]);
+                        $selectProducts->execute();
+                        $resultProducts = $selectProducts->get_result();
+                        while ($rowProducts = $resultProducts->fetch_assoc()) {
+                            ?>
+                            <tr>
+                                <td><?= htmlspecialchars($rowProducts["Product_Name"]) ?></td>
+                                <td><?= htmlspecialchars($rowProducts["CountOfItemsBought"]) ?></td>
+                            </tr>
+                            <?php
+                        }
+                        ?>
+                    </table>
+                    <?php
+                } else {
+                    ?>
+                    <form method="POST">
+                        <input type="hidden" name="OrderId" value="<?= htmlspecialchars($row["OrderId"]) ?>">
+                        <input type="submit" value="Details">
+                    </form>
+                </td>
+                <?php
+            }
+        }
+    } else {
+        echo "<tr><td colspan='4'>No orders found.</td></tr>";
     }
-} else {
-    echo "<tr><td colspan='4'>No orders found.</td></tr>";
-}
 
-// Close the result set if it was a prepared statement
-if ($userRole != 'Admin') {
-    $result->close();
-}
-
-
+    // Close the result set if it was a prepared statement
+    if ($userRole != 'Admin') {
+        $stmt->close();
+    }
     ?>
 </table>
 </body>
