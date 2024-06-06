@@ -28,14 +28,32 @@ $stmt->fetch();
 $stmt->close();
 
 if ($userRole == 'Admin') {
-    $sql = "SELECT UserName, OrderId, Sum(CountOfItemsBought) as TotalItems from userstoproducts group by OrderId";
+    $sql = "SELECT UserName, OrderId, SUM(CountOfItemsBought) as TotalItems, SUM(CountOfItemsBought * Price) as TotalPrice, Status FROM userstoproducts GROUP BY OrderId";
     $result = $db->query($sql);
 } else {
-    $sql = "SELECT UserName, OrderId, Sum(CountOfItemsBought) as TotalItems from userstoproducts where UserName = ? group by OrderId";
+    $sql = "SELECT UserName, OrderId, SUM(CountOfItemsBought) as TotalItems, SUM(CountOfItemsBought * Price) as TotalPrice, Status FROM userstoproducts WHERE UserName = ? GROUP BY OrderId";
     $stmt = $db->prepare($sql);
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $result = $stmt->get_result();
+}
+
+// Handle order processing if the form is submitted
+if ($userRole == 'Admin' && isset($_POST['processOrder'])) {
+    // Get the order ID to process
+    $orderIdToProcess = $_POST['ProcessOrderId'];
+    
+    // Update the order status to 'Processed' in the database
+    $updateStatusSql = "UPDATE Orders SET Status = 'Processed' WHERE OrderId = ?";
+    $updateStatusStmt = $db->prepare($updateStatusSql);
+    $updateStatusStmt->bind_param("i", $orderIdToProcess);
+    $updateStatusStmt->execute();
+    $updateStatusStmt->close();
+
+    
+    // Redirect to the same page to refresh the order history
+    header("Location: {$_SERVER['REQUEST_URI']}");
+    exit;
 }
 ?>
 <!DOCTYPE html>
@@ -105,7 +123,7 @@ if ($userRole == 'Admin') {
             overflow: hidden;
         }
 
-        .top-nav a {
+        .top-nav {
             float: left;
             display: block;
             color: white;
@@ -161,6 +179,11 @@ if ($userRole == 'Admin') {
         <th>User Name</th>
         <th>Order ID</th>
         <th>Total Items</th>
+        <th>Total Price</th>
+        <th>Status</th>
+        <?php if ($userRole == 'Admin') { ?>
+            <th>Action</th>
+        <?php } ?>
         <!-- Add more columns as needed -->
     </tr>
     <?php
@@ -171,47 +194,62 @@ if ($userRole == 'Admin') {
             echo "<td>" . htmlspecialchars($row["UserName"]) . "</td>";
             echo "<td>" . htmlspecialchars($row["OrderId"]) . "</td>";
             echo "<td>" . htmlspecialchars($row["TotalItems"]) . "</td>";
+            // Check the status and display the price accordingly
+            if ($row["Status"] == "Pending") {
+                echo "<td>" . htmlspecialchars($row["TotalPrice"]) . " (can fluctuate)</td>";
+
+            } else {
+                echo "<td>" . htmlspecialchars($row["TotalPrice"]) . "</td>";
+            }
+            echo "<td>" . htmlspecialchars($row["Status"]) . "</td>";
+            echo "<td>";
+            if ($userRole == 'Admin' && $row["Status"] == "Pending") {
+                // Display process order button for Admin
+                echo "<form method='POST'>";
+                echo "<input type='hidden' name='ProcessOrderId' value='" . htmlspecialchars($row["OrderId"]) . "'>";
+                echo "<input type='submit' name='processOrder' value='Process'>";
+                echo "</form>";
+            }
+            echo "</td>";
             ?>
             <td>
                 <?php
-                if (isset($_POST["OrderId"]) && ($_POST["OrderId"] == $row["OrderId"])) {
-                    ?>
-                    <table>
-                        <tr>
-                            <th>Product Name</th>
-                            <th>Count</th>
-                            <!-- Add more columns as needed -->
-                        </tr>
-                        <?php
-                        $selectProducts = $db->prepare("SELECT Product_Name, CountOfItemsBought FROM userstoproducts WHERE OrderId = ?");
-                        $selectProducts->bind_param("i", $_POST["OrderId"]);
-                        $selectProducts->execute();
-                        $resultProducts = $selectProducts->get_result();
-                        while ($rowProducts = $resultProducts->fetch_assoc()) {
-                            ?>
-                            <tr>
-                                <td><?= htmlspecialchars($rowProducts["Product_Name"]) ?></td>
-                                <td><?= htmlspecialchars($rowProducts["CountOfItemsBought"]) ?></td>
-                            </tr>
-                            <?php
-                        }
-                        ?>
-                    </table>
-                    <?php
-                } else {
+                if ((isset($_POST["OrderId"]) && ($_POST["OrderId"] == $row["OrderId"]))) {
+            ?>
+            <table>
+                <tr>
+                    <th>Product name </th>
+                    <th>Count</th>
+                </tr>
+<?php
+$selectProducts = $connection->prepare("SELECT Product_ID, CountOfItemsBought, Product_Name from userstoproducts where OrderId = ?");
+$selectProducts->bind_param("i", $_POST["OrderId"]);
+$selectProducts->execute();
+$resultProducts = $selectProducts->get_result();
+while ($rowProducts = $resultProducts->fetch_assoc()) {
+    ?>
+    <tr>
+        <td><?=$rowProducts["Product_Name"]?></td>
+        <td><?=$rowProducts["CountOfItemsBought"]?></td>
+    </tr>
+    <?php
+}
+?>
+            </table>
+            <?php
+                }
+                else {
                     ?>
                     <form method="POST">
-                        <input type="hidden" name="OrderId" value="<?= htmlspecialchars($row["OrderId"]) ?>">
-                        <input type="submit" value="Details">
-                    </form>
-                </td>
+                    <input type="hidden" name="OrderId" value="<?= $row["OrderId"]?>">
+                    <input type="submit" value="Details">
+                </form>
                 <?php
-            }
+                }
+                
+            echo "</tr>";
         }
-    } else {
-        echo "<tr><td colspan='4'>No orders found.</td></tr>";
-    }
-
+        }
     // Close the result set if it was a prepared statement
     if ($userRole != 'Admin') {
         $stmt->close();
@@ -220,3 +258,4 @@ if ($userRole == 'Admin') {
 </table>
 </body>
 </html>
+
