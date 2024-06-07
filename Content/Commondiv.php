@@ -27,7 +27,6 @@ $loginText = "Connexion";
 if (!isset($_SESSION["UserLoggedIn"])) {
         $_SESSION["UserLoggedIn"] = false;
     }
-    
 
 /*$ArrayOfStrings = [];
 $fileHandle = fopen("Translations.csv", "r");
@@ -73,6 +72,10 @@ function topnav($activePage, $language)
                         else
                                 print "Contact"; ?>
                 </a>
+                <?php
+                if ($_SESSION["UserLoggedIn"])
+                {
+        ?>
                 <a class="<?php if ($activePage == 4)
                         print("active");
                 else
@@ -82,15 +85,16 @@ function topnav($activePage, $language)
                         else
                                 print "Produits"; ?>
                 </a>
-                <a class="<?php if ($activePage == 5)
-                        print("active");
-                else
-                        print("inactive"); ?>" href="Login.php?lang=<?= $language ?>">
-                        <?php if ($language == "EN")
-                                print "Login";
-                        else
-                                print "Connexion"; ?>
-                </a>
+                <?php
+                }
+                ?>
+                 <a class="<?php if ($activePage == 5) print("active"); else print("inactive"); ?>" href="Login.php?lang=<?= $language ?>">
+            <?php if ($language == "EN") {
+                print $_SESSION["UserLoggedIn"] ? "Logout" : "Login";
+            } else {
+                print $_SESSION["UserLoggedIn"] ? "Déconnexion" : "Connexion";
+            } ?>
+        </a>
                 <?php
                 if ($_SESSION["UserLoggedIn"])
                 {
@@ -117,7 +121,7 @@ function topnav($activePage, $language)
                         <?php if ($language == "EN")
                                 print "Shopping Cart";
                         else
-                                print "Carte de Shopping"; ?>
+                                print "Panier"; ?>
                 </a>
                 <a class="<?php if ($activePage == 8)
                         print("active");
