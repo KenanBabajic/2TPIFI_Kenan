@@ -1,7 +1,6 @@
 <?php
 session_start();
 include "Commondiv.php";
-include "update_product.php";
 
 if (!isset($_SESSION["UserLoggedIn"]) || $_SESSION["UserLoggedIn"] !== true) {
     // Redirect user to login page if not logged in
@@ -9,6 +8,42 @@ if (!isset($_SESSION["UserLoggedIn"]) || $_SESSION["UserLoggedIn"] !== true) {
     exit();
 }
 
+$username = $_SESSION["UserName"];
+$conn = new mysqli("localhost", "root", "", "Websitedatabase");
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Check if user is an admin
+$stmt = $conn->prepare("SELECT Role FROM Users WHERE UserName = ?");
+$stmt->bind_param("s", $username);
+$stmt->execute();
+$stmt->bind_result($userRole);
+$stmt->fetch();
+$stmt->close();
+
+// Handle form submissions
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (isset($_POST['buy'])) {
+        $productID = $_POST['productID'];
+        $quantity = 1;
+        $_SESSION['cart'][$productID] = isset($_SESSION['cart'][$productID]) ? $_SESSION['cart'][$productID] + $quantity : $quantity;
+    } elseif (isset($_POST['updateProduct']) && $userRole === 'Admin') {
+        $productID = $_POST['productID'];
+        $productName = $_POST['productName'];
+        $description = $_POST['description'];
+        $price = $_POST['price'];
+        $image = $_POST['image'];
+
+        $updateSql = "UPDATE Products SET Product_Name=?, Description=?, Price=?, Image=? WHERE Product_ID=?";
+        $stmt = $conn->prepare($updateSql);
+        $stmt->bind_param("ssdsi", $productName, $description, $price, $image, $productID);
+        $stmt->execute();
+        $stmt->close();
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -18,7 +53,7 @@ if (!isset($_SESSION["UserLoggedIn"]) || $_SESSION["UserLoggedIn"] !== true) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Products</title>
-    <link rel="stylesheet" href="Website4.css?val=<?=time(); ?>">
+    <link rel="stylesheet" href="Website4.css?val=<?= time(); ?>">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300&display=swap" rel="stylesheet">
     <style>
@@ -64,6 +99,7 @@ if (!isset($_SESSION["UserLoggedIn"]) || $_SESSION["UserLoggedIn"] !== true) {
                 background-color: #000;
                 color: #3498db;
             }
+
             100% {
                 background-color: #3498db;
                 color: #000;
@@ -170,7 +206,7 @@ if (!isset($_SESSION["UserLoggedIn"]) || $_SESSION["UserLoggedIn"] !== true) {
 <body>
     <section>
         <div class="Bgimg">
-            <p class="ElectronicsShop"><?=($ArrayOfStrings["CommonShopName"]);?></p>
+            <p class="ElectronicsShop"><?= ($ArrayOfStrings["CommonShopName"]); ?></p>
         </div>
         <?php
         topnav(4, $language);
@@ -179,46 +215,11 @@ if (!isset($_SESSION["UserLoggedIn"]) || $_SESSION["UserLoggedIn"] !== true) {
     <section id="Spacesection">
         <div class="AllProducts">
             <?php
-            $username = $_SESSION["UserName"];
-            $conn = new mysqli("localhost", "root", "", "Websitedatabase");
-
-            if ($conn->connect_error) {
-                die("Connection failed: " . $conn->connect_error);
-            }
-
-            $stmt = $conn->prepare("SELECT Role FROM Users WHERE UserName = ?");
-            $stmt->bind_param("s", $username);
-            $stmt->execute();
-            $stmt->bind_result($userRole);
-            $stmt->fetch();
-            $stmt->close();
-
             $sql = "SELECT * FROM Products";
             $result = $conn->query($sql);
             $totalItemsInCart = 0;
             if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
                 $totalItemsInCart = array_sum($_SESSION['cart']);
-            }
-
-            if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                if (isset($_POST['buy'])) {
-                    $productID = $_POST['productID'];
-                    $quantity = 1;
-                    $_SESSION['cart'][$productID] = isset($_SESSION['cart'][$productID]) ? $_SESSION['cart'][$productID] + $quantity : $quantity;
-                } elseif (isset($_POST['updateProduct']) && $userRole === 'admin') {
-                    $productID = $_POST['productID'];
-                    $productName = $_POST['productName'];
-                    $description = $_POST['description'];
-                    $price = $_POST['price'];
-                    $image = $_POST['image'];
-
-                    $updateSql = "UPDATE products SET Product_Name='$productName', Description='$description', Price='$price', Image='$image' WHERE Product_ID='$productID'";
-                    if ($conn->query($updateSql) === TRUE) {
-                        echo "Product updated successfully";
-                    } else {
-                        echo "Error updating product: " . $conn->error;
-                    }
-                }
             }
 
             if ($result->num_rows > 0) {

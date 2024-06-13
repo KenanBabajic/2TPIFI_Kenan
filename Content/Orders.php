@@ -18,7 +18,7 @@ if (!isset($_SESSION["UserLoggedIn"])) {
     exit;
 }
 
-// Fetch user's order history from the database view
+// Fetch user's role
 $username = $_SESSION["UserName"];
 $stmt = $db->prepare("SELECT Role FROM Users WHERE UserName = ?");
 $stmt->bind_param("s", $username);
@@ -28,10 +28,25 @@ $stmt->fetch();
 $stmt->close();
 
 if ($userRole == 'Admin') {
-    $sql = "SELECT UserName, OrderId, SUM(CountOfItemsBought) as TotalItems, SUM(CountOfItemsBought * Price) as TotalPrice, Status FROM userstoproducts GROUP BY OrderId";
+    $sql = "SELECT u.UserName, o.OrderId, 
+                   COALESCE(o.TotalItems, SUM(up.CountOfItemsBought)) as TotalItems, 
+                   COALESCE(o.TotalPrice, SUM(up.CountOfItemsBought * up.Price)) as TotalPrice, 
+                   o.Status 
+            FROM Orders o
+            LEFT JOIN userstoproducts up ON o.OrderId = up.OrderId
+            LEFT JOIN Users u ON up.UserId = u.UserId
+            GROUP BY o.OrderId, o.TotalItems, o.TotalPrice";
     $result = $db->query($sql);
 } else {
-    $sql = "SELECT UserName, OrderId, SUM(CountOfItemsBought) as TotalItems, SUM(CountOfItemsBought * Price) as TotalPrice, Status FROM userstoproducts WHERE UserName = ? GROUP BY OrderId";
+    $sql = "SELECT u.UserName, o.OrderId, 
+                   COALESCE(o.TotalItems, SUM(up.CountOfItemsBought)) as TotalItems, 
+                   COALESCE(o.TotalPrice, SUM(up.CountOfItemsBought * up.Price)) as TotalPrice, 
+                   o.Status 
+            FROM Orders o
+            LEFT JOIN userstoproducts up ON o.OrderId = up.OrderId
+            LEFT JOIN Users u ON up.UserId = u.UserId
+            WHERE u.UserName = ?
+            GROUP BY o.OrderId, o.TotalItems, o.TotalPrice";
     $stmt = $db->prepare($sql);
     $stmt->bind_param("s", $username);
     $stmt->execute();
@@ -42,15 +57,24 @@ if ($userRole == 'Admin') {
 if ($userRole == 'Admin' && isset($_POST['processOrder'])) {
     // Get the order ID to process
     $orderIdToProcess = $_POST['ProcessOrderId'];
-    
-    // Update the order status to 'Processed' in the database
-    $updateStatusSql = "UPDATE Orders SET Status = 'Processed' WHERE OrderId = ?";
+
+    // Calculate the total price of the order
+    $orderTotalSql = "SELECT SUM(CountOfItemsBought * Price) AS TotalPrice, SUM(CountOfItemsBought) AS TotalItems 
+                      FROM userstoproducts WHERE OrderId = ?";
+    $orderTotalStmt = $db->prepare($orderTotalSql);
+    $orderTotalStmt->bind_param("i", $orderIdToProcess);
+    $orderTotalStmt->execute();
+    $orderTotalStmt->bind_result($totalPrice, $totalItems);
+    $orderTotalStmt->fetch();
+    $orderTotalStmt->close();
+
+    // Update the order status to 'Processed' and set the total price and total items
+    $updateStatusSql = "UPDATE Orders SET Status = 'Processed', TotalPrice = ?, TotalItems = ? WHERE OrderId = ?";
     $updateStatusStmt = $db->prepare($updateStatusSql);
-    $updateStatusStmt->bind_param("i", $orderIdToProcess);
+    $updateStatusStmt->bind_param("dii", $totalPrice, $totalItems, $orderIdToProcess);
     $updateStatusStmt->execute();
     $updateStatusStmt->close();
 
-    
     // Redirect to the same page to refresh the order history
     header("Location: {$_SERVER['REQUEST_URI']}");
     exit;
@@ -194,65 +218,52 @@ if ($userRole == 'Admin' && isset($_POST['processOrder'])) {
             echo "<td>" . htmlspecialchars($row["UserName"]) . "</td>";
             echo "<td>" . htmlspecialchars($row["OrderId"]) . "</td>";
             echo "<td>" . htmlspecialchars($row["TotalItems"]) . "</td>";
-            // Check the status and display the price accordingly
+            // Display the total price with the appropriate message based on the order status
             if ($row["Status"] == "Pending") {
                 echo "<td>" . htmlspecialchars($row["TotalPrice"]) . " (can fluctuate)</td>";
-
             } else {
                 echo "<td>" . htmlspecialchars($row["TotalPrice"]) . "</td>";
             }
             echo "<td>" . htmlspecialchars($row["Status"]) . "</td>";
-            echo "<td>";
             if ($userRole == 'Admin' && $row["Status"] == "Pending") {
                 // Display process order button for Admin
+                echo "<td>";
                 echo "<form method='POST'>";
                 echo "<input type='hidden' name='ProcessOrderId' value='" . htmlspecialchars($row["OrderId"]) . "'>";
                 echo "<input type='submit' name='processOrder' value='Process'>";
                 echo "</form>";
+                echo "</td>";
+            } else {
+                echo "<td></td>";
+            }
+            echo "<td>";
+            if (isset($_POST["OrderId"]) && ($_POST["OrderId"] == $row["OrderId"])) {
+                echo "<table>";
+                echo "<tr><th>Product Name</th><th>Count</th></tr>";
+                $selectProducts = $db->prepare("SELECT Product_Name, CountOfItemsBought FROM userstoproducts WHERE OrderId = ?");
+                $selectProducts->bind_param("i", $_POST["OrderId"]);
+                $selectProducts->execute();
+                $resultProducts = $selectProducts->get_result();
+
+                while ($rowProducts = $resultProducts->fetch_assoc()) {
+                    echo "<tr>";
+                    echo "<td>" . htmlspecialchars($rowProducts["Product_Name"]) . "</td>";
+                    echo "<td>" . htmlspecialchars($rowProducts["CountOfItemsBought"]) . "</td>";
+                    echo "</tr>";
+                }
+
+                echo "</table>";
+            } else {
+                echo "<form method='POST'>";
+                echo "<input type='hidden' name='OrderId' value='" . $row["OrderId"] . "'>";
+                echo "<input type='submit' value='Details'>";
+                echo "</form>";
             }
             echo "</td>";
-            ?>
-            <td>
-                <?php
-                if ((isset($_POST["OrderId"]) && ($_POST["OrderId"] == $row["OrderId"]))) {
-            ?>
-            <table>
-                <tr>
-                    <th>Product name </th>
-                    <th>Count</th>
-                </tr>
-<?php
-$selectProducts = $connection->prepare("SELECT Product_ID, CountOfItemsBought, Product_Name from userstoproducts where OrderId = ?");
-$selectProducts->bind_param("i", $_POST["OrderId"]);
-$selectProducts->execute();
-$resultProducts = $selectProducts->get_result();
-while ($rowProducts = $resultProducts->fetch_assoc()) {
-    ?>
-    <tr>
-        <td><?=$rowProducts["Product_Name"]?></td>
-        <td><?=$rowProducts["CountOfItemsBought"]?></td>
-    </tr>
-    <?php
-}
-?>
-            </table>
-            <?php
-                }
-                else {
-                    ?>
-                    <form method="POST">
-                    <input type="hidden" name="OrderId" value="<?= $row["OrderId"]?>">
-                    <input type="submit" value="Details">
-                </form>
-                <?php
-                }
-                
             echo "</tr>";
         }
-        }
-    // Close the result set if it was a prepared statement
-    if ($userRole != 'Admin') {
-        $stmt->close();
+    } else {
+        echo "<tr><td colspan='6'>No orders found.</td></tr>";
     }
     ?>
 </table>
