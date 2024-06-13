@@ -196,7 +196,7 @@ if ($result->num_rows > 0) {
     echo "Translations replaced successfully in the SQL file.";
 } else {
     echo "No translations found in the database.";
-}
+}h
 
 ?> */
 ?>
