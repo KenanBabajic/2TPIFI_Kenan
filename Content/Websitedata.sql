@@ -94,4 +94,5 @@ INSERT INTO Users (UserId, UserName, Password, Role) VALUES ('1', 'admin', 'admi
 
 ALTER TABLE Orders ADD COLUMN TotalPrice DECIMAL(10, 2);
 ALTER TABLE Orders ADD COLUMN TotalItems INT;
+ALTER TABLE Orders ADD COLUMN Status VARCHAR(20) DEFAULT 'Pending';
 create view userstoproducts as select * from users natural join list natural join products natural join orders;
