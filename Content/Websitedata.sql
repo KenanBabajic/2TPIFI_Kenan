@@ -92,3 +92,4 @@ INSERT INTO Users (UserId, UserName, Password, Role) VALUES ('1', 'admin', 'admi
 -- SELECT * FROM List;
 -- SELECT * FROM Orders;
 
+create view userstoproducts as select * from users natural join list natural join products natural join orders;

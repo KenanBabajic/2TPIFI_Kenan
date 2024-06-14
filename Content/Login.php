@@ -1,7 +1,6 @@
 <?php 
 include "Commondiv.php";
 
-
 // Initialize variables
 $messageForIncorrectLoging = false;
 $registrationMessage = '';
@@ -24,8 +23,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["login"])) {
         die("Connection failed: " . $conn->connect_error);
     }
 
-    // Check if the username and password match
-    $stmt = $conn->prepare("SELECT * FROM Users WHERE UserName = ?");
+    // Check if the username exists and fetch the hashed password
+    $stmt = $conn->prepare("SELECT Password FROM Users WHERE UserName = ?");
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -33,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["login"])) {
 
     if ($result->num_rows > 0) {
         $user = $result->fetch_assoc();
-        if ($user["Password"] === $password) {
+        if (password_verify($password, $user["Password"])) {
             $_SESSION["UserLoggedIn"] = true;
             $_SESSION["UserName"] = $username;
         } else {
@@ -69,9 +68,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["register"])) {
     if ($result->num_rows > 0) {
         $registrationMessage = "Username is already taken.";
     } else {
-        // Insert the new user into the database
+        // Hash the password
+        $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+
+        // Insert the new user into the database with hashed password
         $stmt = $conn->prepare("INSERT INTO Users (UserName, Password, Role) VALUES (?, ?, 'Guest')");
-        $stmt->bind_param("ss", $username, $password);
+        $stmt->bind_param("ss", $username, $hashedPassword);
         if ($stmt->execute()) {
             $registrationMessage = "Registration successful.";
         } else {
@@ -82,7 +84,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["register"])) {
 
     $conn->close();
 }
-
 
 // Logout logic
 if (isset($_POST["Logout"])) {
@@ -112,7 +113,6 @@ if (isset($_POST["Logout"])) {
             background-color: black;
         }
 
-
         .Bgimg {
             background: black;
             /* Add your pattern background */
@@ -135,7 +135,6 @@ if (isset($_POST["Logout"])) {
             opacity: 0.2;
             /* Adjust the opacity of the pattern */
         }
-
 
         .ElectronicsShop {
             font-size: 100px;
@@ -203,13 +202,11 @@ if (isset($_POST["Logout"])) {
             align-items: center;
             box-shadow: rgba(52, 152, 219, 0.4) 5px 5px, rgba(52, 152, 219, 0.3) 10px 10px, rgba(52, 152, 219, 0.2) 15px 15px, rgba(52, 152, 219, 0.1) 20px 20px, rgba(52, 152, 219, 0.05) 25px 25px;
             transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
-
         }
 
         form:hover {
             transform: scale(0.95);
             /* Slightly smaller size when selected */
-
         }
 
         input {
@@ -273,34 +270,30 @@ if (isset($_POST["Logout"])) {
     </section>
     <section>
 
-    
+    <?php if (!$_SESSION["UserLoggedIn"]) : ?>
+        <!-- Registration Form -->
+        <form method="POST">
+            <h2><?= ($ArrayOfStrings["UserRegistrationHeader"]); ?></h2>
+            <input type="text" name="UserNameRegistration" placeholder="<?= ($ArrayOfStrings["UserUsername"]); ?>" required>
+            <input type="password" name="PasswordRegistration" placeholder="<?= ($ArrayOfStrings["UserPassword"]); ?>" required>
+            <input type="submit" value="<?= ($ArrayOfStrings["UserRegistrationPegister"]); ?>" name="register">
+            <div class="message"><?= $registrationMessage; ?></div>
+        </form>
 
-          <?php if (!$_SESSION["UserLoggedIn"]) : ?>
-            <!-- Registration Form -->
-            <form method="POST">
-                <h2><?= ($ArrayOfStrings["UserRegistrationHeader"]); ?></h2>
-                <input type="text" name="UserNameRegistration" placeholder="<?= ($ArrayOfStrings["UserUsername"]); ?>" required>
-                <input type="password" name="PasswordRegistration" placeholder="<?= ($ArrayOfStrings["UserPassword"]); ?>" required>
-                <input type="submit" value="<?= ($ArrayOfStrings["UserRegistrationPegister"]); ?>" name="register">
-                <div class="message"><?= $registrationMessage; ?></div>
-            </form>
-
-            <!-- Login Form -->
-            <form method="POST" id="Spacesection">
-                <h2><?= ($ArrayOfStrings["UserLoginHeader"]); ?></h2>
-                <input type="text" name="UserName" placeholder="<?= ($ArrayOfStrings["UserUsername"]); ?>" required>
-                <input type="password" name="Password" placeholder="<?= ($ArrayOfStrings["UserPassword"]); ?>" required>
-                <input type="submit" value="<?= ($ArrayOfStrings["UserLoginLogin"]); ?>" name="login">
-                <div class="message"><?= $messageForIncorrectLoging ? $ArrayOfStrings["WrongPassword"] : ""; ?></div>
-            </form>
-        <?php else : ?>
-            <h1>Welcome back, <?= $_SESSION["UserName"] ?></h1>
-            <form method="POST">
-                <input type="submit" name="Logout" value="Logout">
-            </form>
-        <?php endif; ?>
-
-</script>
+        <!-- Login Form -->
+        <form method="POST" id="Spacesection">
+            <h2><?= ($ArrayOfStrings["UserLoginHeader"]); ?></h2>
+            <input type="text" name="UserName" placeholder="<?= ($ArrayOfStrings["UserUsername"]); ?>" required>
+            <input type="password" name="Password" placeholder="<?= ($ArrayOfStrings["UserPassword"]); ?>" required>
+            <input type="submit" value="<?= ($ArrayOfStrings["UserLoginLogin"]); ?>" name="login">
+            <div class="message"><?= $messageForIncorrectLoging ? $ArrayOfStrings["WrongPassword"] : ""; ?></div>
+        </form>
+    <?php else : ?>
+        <h1>Welcome back, <?= $_SESSION["UserName"] ?></h1>
+        <form method="POST">
+            <input type="submit" name="Logout" value="Logout">
+        </form>
+    <?php endif; ?>
 
     </section>
     <footer>
