@@ -92,4 +92,6 @@ INSERT INTO Users (UserId, UserName, Password, Role) VALUES ('1', 'admin', 'admi
 -- SELECT * FROM List;
 -- SELECT * FROM Orders;
 
+ALTER TABLE Orders ADD COLUMN TotalPrice DECIMAL(10, 2);
+ALTER TABLE Orders ADD COLUMN TotalItems INT;
 create view userstoproducts as select * from users natural join list natural join products natural join orders;
