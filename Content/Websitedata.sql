@@ -81,8 +81,8 @@ Create TABLE List (
     FOREIGN KEY (Product_ID) REFERENCES Products(Product_ID)
 
 );
-
-INSERT INTO Users (UserId, UserName, Password, Role) VALUES ('1', 'admin', 'adminpassword', 'Admin');
+INSERT INTO Users (UserId, UserName, Password, Role) VALUES ('1', 'admin', '$2y$10$2EKKQQmkWemHCjO9GxlzQOdrrRCFnGDaevz4kJsETY.VR2.WJdlli', 'Admin');
+-- THE PASSWORD IS "adminpassword"
 
 
 -- Display the inserted values

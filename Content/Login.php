@@ -10,6 +10,10 @@ if (!isset($_SESSION["UserLoggedIn"])) {
     $_SESSION["UserLoggedIn"] = false;
 }
 
+$password = 'adminpassword';
+$hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+echo $hashedPassword;
+
 // Login logic
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["login"])) {
     $username = $_POST["UserName"];
